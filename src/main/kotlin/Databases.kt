@@ -8,12 +8,14 @@ import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.Database
 
 fun Application.configureDatabases() {
-    val database = Database.connect(
-        url = "jdbc:mariadb://192.168.1.14:3306/taskmanager",
-        user = "root",
-        driver = "org.mariadb.jdbc.Driver",
-        password = "TaskManagerPw123!",
-    )
+    val database =
+            Database.connect(
+                url = "jdbc:mariadb://raw.raphdf201.net:3306/taskmanager",// prod ip 192.168.1.14
+                user = "taskmgr",
+                driver = "org.mariadb.jdbc.Driver",
+                password = "TaskManagerPw124!",
+            )
+
     val databaseService = DatabaseService(database)
     routing {
         get("/tasks") {
