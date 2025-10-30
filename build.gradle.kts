@@ -17,7 +17,7 @@ dependencies {
     implementation(libs.ktor.server.content.negotiation)
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
-    implementation(libs.h2)
+    implementation(libs.exposed.mariadb)
     implementation(libs.ktor.server.host.common)
     implementation(libs.ktor.server.status.pages)
     implementation(libs.ktor.server.sessions)
