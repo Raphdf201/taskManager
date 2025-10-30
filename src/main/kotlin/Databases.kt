@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
 
 fun Application.configureDatabases() {
@@ -19,7 +20,8 @@ fun Application.configureDatabases() {
     val databaseService = DatabaseService(database)
     routing {
         get("/tasks") {
-            call.respond(databaseService.getTasks())
+            val tasks = databaseService.getTasks()
+            call.respondText(Json.encodeToString(tasks), ContentType.Application.Json, HttpStatusCode.OK)
         }
 
         post("/tasks") {
