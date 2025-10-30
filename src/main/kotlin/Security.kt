@@ -1,24 +1,13 @@
 package net.raphdf201
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
-import io.ktor.http.HttpMethod
-import io.ktor.server.application.Application
-import io.ktor.server.application.install
-import io.ktor.server.auth.OAuthAccessTokenResponse
-import io.ktor.server.auth.OAuthServerSettings
-import io.ktor.server.auth.authenticate
-import io.ktor.server.auth.authentication
-import io.ktor.server.auth.oauth
-import io.ktor.server.response.respondRedirect
-import io.ktor.server.response.respondText
-import io.ktor.server.routing.get
-import io.ktor.server.routing.routing
-import io.ktor.server.sessions.Sessions
-import io.ktor.server.sessions.cookie
-import io.ktor.server.sessions.get
-import io.ktor.server.sessions.sessions
-import io.ktor.server.sessions.set
+import io.ktor.client.*
+import io.ktor.client.engine.apache.*
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
 
 fun Application.configureSecurity() {
@@ -54,7 +43,7 @@ fun Application.configureSecurity() {
             get("login") {
                 call.respondRedirect("/callback")
             }
-        
+
             get("/callback") {
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.authentication.principal()
                 call.sessions.set(UserSession(principal?.accessToken.toString()))

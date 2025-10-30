@@ -2,16 +2,10 @@ package net.raphdf201
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 
 @Serializable
 data class ExposedUser(
@@ -37,7 +31,7 @@ class DatabaseService(database: Database) {
         override val primaryKey = PrimaryKey(id)
     }
 
-    object Tasks: Table() {
+    object Tasks : Table() {
         val id = integer("id").autoIncrement()
         val title = varchar("title", 50)
         val description = varchar("description", 500)
@@ -84,14 +78,31 @@ class DatabaseService(database: Database) {
         return dbQuery {
             Tasks.selectAll()
                 .where { Tasks.id eq id }
-                .map { ExposedTask(
-                    it[Tasks.title],
-                    it[Tasks.description],
-                    it[Tasks.createdDate],
-                    it[Tasks.dueDate],
-                    it[Tasks.creatorId]
-                ) }
+                .map {
+                    ExposedTask(
+                        it[Tasks.title],
+                        it[Tasks.description],
+                        it[Tasks.createdDate],
+                        it[Tasks.dueDate],
+                        it[Tasks.creatorId]
+                    )
+                }
                 .singleOrNull()
+        }
+    }
+
+    suspend fun getTasks(): List<ExposedTask> {
+        return dbQuery {
+            Tasks.selectAll()
+                .map {
+                    ExposedTask(
+                        it[Tasks.title],
+                        it[Tasks.description],
+                        it[Tasks.createdDate],
+                        it[Tasks.dueDate],
+                        it[Tasks.creatorId]
+                    )
+                }
         }
     }
 
