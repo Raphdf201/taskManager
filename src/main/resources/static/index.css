@@ -11,11 +11,11 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: linear-gradient(135deg, #fef3c7, #fce7f3, #fed7aa, #fde2e4, #818181);
+    background: linear-gradient(135deg, white, whitesmoke);
     background-size: 400% 400%;
     animation: waveGradient 10s ease infinite;
     min-height: 100vh;
-    padding: 24px;
+    padding-top: 120px;
 }
 
 @keyframes waveGradient {
@@ -29,29 +29,44 @@ body {
         background-position: 0% 50%;
     }
 }
- .header h1 {
-     font-size: 38px;
-     font-weight: bold;
-     color: #b45309;
-     margin-bottom: 8px;
-     font-family: Jetbrains Mono, sans-serif;
-     text-align: center;
- }
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(135deg, white, whitesmoke);
+    background-size: 400% 400%;
+    animation: waveGradient 20s ease infinite;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px;
+    border-radius: 0 0 24px 24px;
+    transition: transform 0.3s ease;
+}
+.header h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #3f3f3f;
+    margin: 0;
+    font-family: Jetbrains Mono, sans-serif;
+}
+
+.header-logo-right {
+    position: absolute;
+    right: 24px;
+    color: #b45309;
+    display: flex;
+    align-items: center;
+}
 
 .container {
     max-width: 1280px;
     margin: 0 auto;
-}
-
-.header {
-    margin-bottom: 32px;
-}
-
-.header h1 {
-    font-size: 36px;
-    font-weight: bold;
-    color: #1e293b;
-    margin-bottom: 8px;
 }
 
 .header p {
@@ -78,10 +93,10 @@ body {
 
 .stat-card {
     background: white;
+    border: 4px solid #d5d5d5;
     border-radius: 12px;
     padding: 24px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -193,17 +208,20 @@ select:focus {
 
 .task-card {
     background: white;
+    border: 4px solid #d5d5d5;
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border: 1px solid #e2e8f0;
-    transition: box-shadow 0.2s;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: translateY(0) scale(1);
 }
 
 .task-card:hover {
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
+    transform: translateY(-12px) scale(1.02);
+    border-color: #3b82f6;
+    background: #fafafa;
 }
-
 .task-content {
     display: flex;
     justify-content: space-between;

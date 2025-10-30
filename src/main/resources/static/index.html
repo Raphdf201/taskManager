@@ -10,7 +10,13 @@
 <body>
 <div class="container">
     <div class="header">
+        <div class="header-logo">
+            <i data-lucide="list-checks" style="width: 32px; height: 32px;"></i>
+        </div>
         <h1>Gestion des Tâches 3990</h1>
+        <div class="header-logo-right">
+            <img src="techforkids logo.png" alt="Logo" style="width: 82px; height: 82px;">
+        </div>
     </div>
 
     <div class="stats-grid">
@@ -51,40 +57,6 @@
             </div>
         </div>
     </div>
-
-    <div class="filters-bar">
-        <div class="filters-content">
-            <div class="search-box">
-                <i data-lucide="search" class="search-icon" style="width: 20px; height: 20px"></i>
-                <input type="text" id="search-input" placeholder="Rechercher une tâche...">
-            </div>
-            <select id="filter-status">
-                <option value="all">Tous les statuts</option>
-                <option value="todo">À faire</option>
-                <option value="in_progress">En cours</option>
-                <option value="done">Terminé</option>
-            </select>
-            <select id="filter-project">
-                <option value="all">Tous les projets</option>
-                <option value="1">Marketing Q4</option>
-                <option value="2">Développement App</option>
-                <option value="3">Support Client</option>
-                <option value="4">Infrastructure</option>
-            </select>
-            <select id="filter-assignee">
-                <option value="all">Tous les membres</option>
-                <option value="1">Sophie Martin</option>
-                <option value="2">Lucas Dubois</option>
-                <option value="3">Marie Lefebvre</option>
-                <option value="4">Thomas Bernard</option>
-            </select>
-            <button class="btn-primary" onclick="openModal()">
-                <i data-lucide="plus" style="width: 20px; height: 20px;"></i>
-                Nouvelle tâche
-            </button>
-        </div>
-    </div>
-
     <div class="tasks-list" id="tasks-container">
         <!-- Tâche 1 -->
         <div class="task-card">
