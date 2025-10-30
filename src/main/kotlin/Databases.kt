@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.Database
 fun Application.configureDatabases() {
     val database =
             Database.connect(
-                url = "jdbc:mariadb://localhost:3306/taskmanager",
+                url = "jdbc:mariadb://192.168.1.14:3306/taskmanager",
                 user = "taskmgr",
                 driver = "org.mariadb.jdbc.Driver",
                 password = "TaskManagerPw124!",
