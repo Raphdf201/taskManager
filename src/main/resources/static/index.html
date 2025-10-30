@@ -1,7 +1,455 @@
-<html>
- <head>
- </head>
- <body>
-   <h1>Hello Ktor!</h1>
- </body>
-</html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Tâches d'Équipe</title>
+    <link rel="stylesheet" href="index.css" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Gestion des Tâches</h1>
+        <p>Organisez et suivez les tâches de votre équipe</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>Total</h3>
+                <p id="stat-total" style="color: #1e293b;">8</p>
+            </div>
+            <div class="stat-icon" style="background: #f1f5f9;">
+                <i data-lucide="tag" style="color: #64748b; width: 24px; height: 24px;"></i>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>À faire</h3>
+                <p id="stat-todo" style="color: #64748b;">3</p>
+            </div>
+            <div class="stat-icon" style="background: #f1f5f9;">
+                <i data-lucide="circle" style="color: #64748b; width: 24px; height: 24px;"></i>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>En cours</h3>
+                <p id="stat-progress" style="color: #3b82f6;">3</p>
+            </div>
+            <div class="stat-icon" style="background: #dbeafe;">
+                <i data-lucide="clock" style="color: #3b82f6; width: 24px; height: 24px;"></i>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-content">
+                <h3>Terminées</h3>
+                <p id="stat-done" style="color: #10b981;">2</p>
+            </div>
+            <div class="stat-icon" style="background: #d1fae5;">
+                <i data-lucide="check-circle-2" style="color: #10b981; width: 24px; height: 24px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="filters-bar">
+        <div class="filters-content">
+            <div class="search-box">
+                <i data-lucide="search" class="search-icon" style="width: 20px; height: 20px;"></i>
+                <input type="text" id="search-input" placeholder="Rechercher une tâche...">
+            </div>
+            <select id="filter-status">
+                <option value="all">Tous les statuts</option>
+                <option value="todo">À faire</option>
+                <option value="in_progress">En cours</option>
+                <option value="done">Terminé</option>
+            </select>
+            <select id="filter-project">
+                <option value="all">Tous les projets</option>
+                <option value="1">Marketing Q4</option>
+                <option value="2">Développement App</option>
+                <option value="3">Support Client</option>
+                <option value="4">Infrastructure</option>
+            </select>
+            <select id="filter-assignee">
+                <option value="all">Tous les membres</option>
+                <option value="1">Sophie Martin</option>
+                <option value="2">Lucas Dubois</option>
+                <option value="3">Marie Lefebvre</option>
+                <option value="4">Thomas Bernard</option>
+            </select>
+            <button class="btn-primary" onclick="openModal()">
+                <i data-lucide="plus" style="width: 20px; height: 20px;"></i>
+                Nouvelle tâche
+            </button>
+        </div>
+    </div>
+
+    <div class="tasks-list" id="tasks-container">
+        <!-- Tâche 1 -->
+        <div class="task-card">
+            <div class="task-content">
+                <div class="task-main">
+                    <div class="task-header">
+                        <i data-lucide="clock" style="width: 20px; height: 20px; color: #3b82f6; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div style="flex: 1;">
+                            <div class="task-title">Concevoir nouvelle landing page</div>
+                            <div class="task-description">Créer les maquettes pour la campagne Q4</div>
+                            <div class="task-meta">
+                                <span class="badge" style="background: #9333ea; color: white;">Marketing Q4</span>
+                                <span class="badge" style="background: #fee2e2; color: #991b1b;">Priorité Haute</span>
+                                <span class="badge" style="background: #f1f5f9; color: #475569;">#design</span>
+                                <span class="badge" style="background: #f1f5f9; color: #475569;">#urgent</span>
+                                <div class="member-info">
+                                    <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748b;"></i>
+                                    <span>05/11/2025</span>
+                                </div>
+                                <div class="member-info">
+                                    <div class="avatar" style="background: #ec4899;">SM</div>
+                                    <span>Sophie Martin</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn-icon btn-edit">
+                        <i data-lucide="edit-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                    <button class="btn-icon btn-delete">
+                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tâche 2 -->
+        <div class="task-card">
+            <div class="task-content">
+                <div class="task-main">
+                    <div class="task-header">
+                        <i data-lucide="circle" style="width: 20px; height: 20px; color: #64748b; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div style="flex: 1;">
+                            <div class="task-title">Optimiser les performances</div>
+                            <div class="task-description">Améliorer le temps de chargement de l'application</div>
+                            <div class="task-meta">
+                                <span class="badge" style="background: #3b82f6; color: white;">Développement App</span>
+                                <span class="badge" style="background: #fee2e2; color: #991b1b;">Priorité Haute</span>
+                                <span class="badge" style="background: #f1f5f9; color: #475569;">#technique</span>
+                                <div class="member-info">
+                                    <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748b;"></i>
+                                    <span>10/11/2025</span>
+                                </div>
+                                <div class="member-info">
+                                    <div class="avatar" style="background: #6366f1;">LD</div>
+                                    <span>Lucas Dubois</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn-icon btn-edit">
+                        <i data-lucide="edit-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                    <button class="btn-icon btn-delete">
+                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tâche 3 -->
+        <div class="task-card">
+            <div class="task-content">
+                <div class="task-main">
+                    <div class="task-header">
+                        <i data-lucide="clock" style="width: 20px; height: 20px; color: #3b82f6; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div style="flex: 1;">
+                            <div class="task-title">Répondre aux tickets clients</div>
+                            <div class="task-description">Traiter les demandes en attente</div>
+                            <div class="task-meta">
+                                <span class="badge" style="background: #10b981; color: white;">Support Client</span>
+                                <span class="badge" style="background: #fef3c7; color: #92400e;">Priorité Moyenne</span>
+                                <span class="badge" style="background: #f1f5f9; color: #475569;">#support</span>
+                                <div class="member-info">
+                                    <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748b;"></i>
+                                    <span style="color: #ef4444; font-weight: 500;">31/10/2025 (En retard)</span>
+                                </div>
+                                <div class="member-info">
+                                    <div class="avatar" style="background: #06b6d4;">ML</div>
+                                    <span>Marie Lefebvre</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn-icon btn-edit">
+                        <i data-lucide="edit-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                    <button class="btn-icon btn-delete">
+                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tâche 4 -->
+        <div class="task-card">
+            <div class="task-content">
+                <div class="task-main">
+                    <div class="task-header">
+                        <i data-lucide="circle" style="width: 20px; height: 20px; color: #64748b; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div style="flex: 1;">
+                            <div class="task-title">Migration serveur</div>
+                            <div class="task-description">Planifier la migration vers le nouveau datacenter</div>
+                            <div class="task-meta">
+                                <span class="badge" style="background: #f97316; color: white;">Infrastructure</span>
+                                <span class="badge" style="background: #fee2e2; color: #991b1b;">Priorité Haute</span>
+                                <span class="badge" style="background: #f1f5f9; color: #475569;">#infra</span>
+                                <div class="member-info">
+                                    <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748b;"></i>
+                                    <span>15/11/2025</span>
+                                </div>
+                                <div class="member-info">
+                                    <div class="avatar" style="background: #f59e0b;">TB</div>
+                                    <span>Thomas Bernard</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn-icon btn-edit">
+                        <i data-lucide="edit-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                    <button class="btn-icon btn-delete">
+                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tâche 5 -->
+        <div class="task-card">
+            <div class="task-content">
+                <div class="task-main">
+                    <div class="task-header">
+                        <i data-lucide="circle" style="width: 20px; height: 20px; color: #64748b; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div style="flex: 1;">
+                            <div class="task-title">Campagne réseaux sociaux</div>
+                            <div class="task-description">Préparer le contenu pour novembre</div>
+                            <div class="task-meta">
+                                <span class="badge" style="background: #9333ea; color: white;">Marketing Q4</span>
+                                <span class="badge" style="background: #fef3c7; color: #92400e;">Priorité Moyenne</span>
+                                <span class="badge" style="background: #f1f5f9; color: #475569;">#marketing</span>
+                                <div class="member-info">
+                                    <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748b;"></i>
+                                    <span>01/11/2025</span>
+                                </div>
+                                <div class="member-info">
+                                    <div class="avatar" style="background: #ec4899;">SM</div>
+                                    <span>Sophie Martin</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn-icon btn-edit">
+                        <i data-lucide="edit-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                    <button class="btn-icon btn-delete">
+                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tâche 6 -->
+        <div class="task-card">
+            <div class="task-content">
+                <div class="task-main">
+                    <div class="task-header">
+                        <i data-lucide="check-circle-2" style="width: 20px; height: 20px; color: #10b981; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div style="flex: 1;">
+                            <div class="task-title">Tests unitaires</div>
+                            <div class="task-description">Augmenter la couverture de tests</div>
+                            <div class="task-meta">
+                                <span class="badge" style="background: #3b82f6; color: white;">Développement App</span>
+                                <span class="badge" style="background: #fef3c7; color: #92400e;">Priorité Moyenne</span>
+                                <span class="badge" style="background: #f1f5f9; color: #475569;">#qualité</span>
+                                <div class="member-info">
+                                    <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748b;"></i>
+                                    <span>25/10/2025</span>
+                                </div>
+                                <div class="member-info">
+                                    <div class="avatar" style="background: #6366f1;">LD</div>
+                                    <span>Lucas Dubois</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn-icon btn-edit">
+                        <i data-lucide="edit-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                    <button class="btn-icon btn-delete">
+                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tâche 7 -->
+        <div class="task-card">
+            <div class="task-content">
+                <div class="task-main">
+                    <div class="task-header">
+                        <i data-lucide="clock" style="width: 20px; height: 20px; color: #3b82f6; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div style="flex: 1;">
+                            <div class="task-title">Documentation API</div>
+                            <div class="task-description">Mettre à jour la documentation technique</div>
+                            <div class="task-meta">
+                                <span class="badge" style="background: #3b82f6; color: white;">Développement App</span>
+                                <span class="badge" style="background: #f1f5f9; color: #475569;">Priorité Basse</span>
+                                <span class="badge" style="background: #f1f5f9; color: #475569;">#doc</span>
+                                <div class="member-info">
+                                    <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748b;"></i>
+                                    <span>20/11/2025</span>
+                                </div>
+                                <div class="member-info">
+                                    <div class="avatar" style="background: #06b6d4;">ML</div>
+                                    <span>Marie Lefebvre</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn-icon btn-edit">
+                        <i data-lucide="edit-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                    <button class="btn-icon btn-delete">
+                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tâche 8 -->
+        <div class="task-card">
+            <div class="task-content">
+                <div class="task-main">
+                    <div class="task-header">
+                        <i data-lucide="check-circle-2" style="width: 20px; height: 20px; color: #10b981; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div style="flex: 1;">
+                            <div class="task-title">Sauvegarde automatique</div>
+                            <div class="task-description">Configurer les sauvegardes quotidiennes</div>
+                            <div class="task-meta">
+                                <span class="badge" style="background: #f97316; color: white;">Infrastructure</span>
+                                <span class="badge" style="background: #fee2e2; color: #991b1b;">Priorité Haute</span>
+                                <span class="badge" style="background: #f1f5f9; color: #475569;">#infra</span>
+                                <span class="badge" style="background: #f1f5f9; color: #475569;">#sécurité</span>
+                                <div class="member-info">
+                                    <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748b;"></i>
+                                    <span>20/10/2025</span>
+                                </div>
+                                <div class="member-info">
+                                    <div class="avatar" style="background: #f59e0b;">TB</div>
+                                    <span>Thomas Bernard</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn-icon btn-edit">
+                        <i data-lucide="edit-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                    <button class="btn-icon btn-delete">
+                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modal-title">Nouvelle tâche</h2>
+            <button class="btn-icon" onclick="closeModal()" style="background: transparent;">
+                <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="task-form">
+                <div class="form-group">
+                    <label>Titre *</label>
+                    <input type="text" id="task-title" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="task-description" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Statut</label>
+                        <select id="task-status">
+                            <option value="todo">À faire</option>
+                            <option value="in_progress">En cours</option>
+                            <option value="done">Terminé</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Priorité</label>
+                        <select id="task-priority">
+                            <option value="low">Basse</option>
+                            <option value="medium">Moyenne</option>
+                            <option value="high">Haute</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Projet</label>
+                        <select id="task-project">
+                            <option value="">Sélectionner un projet</option>
+                            <option value="1">Marketing Q4</option>
+                            <option value="2">Développement App</option>
+                            <option value="3">Support Client</option>
+                            <option value="4">Infrastructure</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Assigné à</label>
+                        <select id="task-assignee">
+                            <option value="">Sélectionner un membre</option>
+                            <option value="1">Sophie Martin</option>
+                            <option value="2">Lucas Dubois</option>
+                            <option value="3">Marie Lefebvre</option>
+                            <option value="4">Thomas Bernard</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Date d'échéance</label>
+                    <input type="date" id="task-date">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Annuler</button>
+                    <button type="submit" class="btn-submit" id="submit-btn">Créer la tâche</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
