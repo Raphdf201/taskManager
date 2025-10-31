@@ -24,7 +24,7 @@ function checkVisibility() {
 window.addEventListener('scroll', () => {
     const currentScroll = window.pageYOffset;
 
-    if (currentScroll > lastScroll && currentScroll > 400) {
+    if (currentScroll > lastScroll && currentScroll > 100) {
         header.classList.add('hidden');
     } else {
         header.classList.remove('hidden');
@@ -42,3 +42,5 @@ function openModal() {
 function closeModal() {
     document.getElementById('modal').classList.remove('active');
 }
+
+lucide.createIcons();
