@@ -167,6 +167,81 @@ async function fetchTasks() {
     }
 }
 
+async function submitTask(event) {
+    if (event) {
+        event.preventDefault();
+    }
+
+    const submitBtn = document.getElementById('submit-btn');
+    const originalText = submitBtn.textContent;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Envoi en cours...';
+
+    try {
+        // Send OPTIONS request first to check CORS
+        const optionsResponse = await fetch(API_URL, {
+            method: 'OPTIONS',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        console.log('OPTIONS response:', {
+            status: optionsResponse.status,
+            allowedMethods: optionsResponse.headers.get('Access-Control-Allow-Methods'),
+            allowedHeaders: optionsResponse.headers.get('Access-Control-Allow-Headers'),
+            allowOrigin: optionsResponse.headers.get('Access-Control-Allow-Origin')
+        });
+
+        const taskData = {
+            title: document.getElementById('task-title').value,
+            description: document.getElementById('task-description').value,
+            dueDate: document.getElementById('task-date').value,
+            creatorId: parseInt(document.getElementById('task-assignee').value) || 1
+        };
+
+        console.log('Sending task data:', taskData);
+
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(taskData)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(`HTTP error! status: ${response.status} - ${errorData}`);
+        }
+
+        const result = await response.json();
+        console.log('Task created successfully:', result);
+
+        closeModal();
+        document.getElementById('task-form').reset();
+
+        // Refresh the task list
+        await fetchTasks();
+
+    } catch (error) {
+        console.error('Error creating task:', error);
+
+        // Check if it's a CORS error
+        if (error.message.includes('Failed to fetch')) {
+            alert('Erreur CORS: Le serveur doit autoriser les requêtes depuis votre domaine.\n\nVérifiez que votre API autorise les CORS headers.');
+        } else {
+            alert('Erreur lors de la création de la tâche: ' + error.message);
+        }
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    }
+}
+
 // Load tasks when page loads
 fetchTasks();
 
