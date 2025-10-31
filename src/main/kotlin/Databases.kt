@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
 
 fun Application.configureDatabases() {
@@ -30,7 +31,7 @@ fun Application.configureDatabases() {
         }
 
         post("/users") {
-            val user = call.receive<ExposedUser>()
+            val user = Json.decodeFromString<ExposedUser>(call.receiveText())
             val id = databaseService.createUser(user)
             call.respond(HttpStatusCode.Created, id)
         }
