@@ -36,7 +36,6 @@ window.addEventListener('scroll', () => {
 
 function openModal() {
     document.getElementById('modal').classList.add('active');
-    lucide.createIcons();
 }
 
 function closeModal() {
