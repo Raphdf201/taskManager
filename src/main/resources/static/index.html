@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Tâches d'Équipe</title>
     <link rel="stylesheet" href="index.css" type="text/css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -57,6 +56,10 @@
             </div>
         </div>
     </div>
+
+    <!-- Floating Add Button -->
+    <button class="floating-add-btn" onclick="openModal()"></button>
+
     <div class="tasks-list" id="tasks-container">
         <!-- Tâche 1 -->
         <div class="task-card">
@@ -421,6 +424,52 @@
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.min.js"></script>
 <script>
+    let lastScroll = 0;
+    const header = document.querySelector('.header');
+
+    function checkVisibility() {
+        const tasks = document.querySelectorAll('.task-card');
+        tasks.forEach((task, index) => {
+            const taskTop = task.getBoundingClientRect().top;
+            const taskBottom = task.getBoundingClientRect().bottom;
+            const windowHeight = window.innerHeight;
+
+            if (taskTop < windowHeight - 1 && taskBottom > 0) {
+                setTimeout(() => {
+                    task.classList.add('visible');
+                }, index * 75);
+            }
+            else if (taskBottom < 0 || taskTop > windowHeight) {
+                task.classList.remove('visible');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > lastScroll && currentScroll > 400) {
+            header.classList.add('hidden');
+        } else {
+            header.classList.remove('hidden');
+        }
+
+        lastScroll = currentScroll;
+        checkVisibility();
+    });
+
+    function openModal() {
+        document.getElementById('modal').classList.add('active');
+        lucide.createIcons();
+    }
+
+    function closeModal() {
+        document.getElementById('modal').classList.remove('active');
+    }
+
     lucide.createIcons();
 </script>
+</body>
+</html>
