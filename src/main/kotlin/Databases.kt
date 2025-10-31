@@ -5,23 +5,22 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
 
 fun Application.configureDatabases() {
     val database =
-            Database.connect(
-                url = "jdbc:mariadb://192.168.1.14:3306/taskmanager",
-                user = "taskmgr",
-                driver = "org.mariadb.jdbc.Driver",
-                password = "TaskManagerPw124!",
-            )
+        Database.connect(
+            url = "jdbc:mariadb://raw.raphdf201.net:3306/taskmanager",
+            user = "taskmgr",
+            driver = "org.mariadb.jdbc.Driver",
+            password = "TaskManagerPw124!",
+        )
 
     val databaseService = DatabaseService(database)
     routing {
         get("/tasks") {
             val tasks = databaseService.getTasks()
-            call.respondText(Json.encodeToString(tasks), ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondJson(tasks)
         }
 
         post("/tasks") {
@@ -40,7 +39,7 @@ fun Application.configureDatabases() {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val user = databaseService.getUser(id)
             if (user != null) {
-                call.respond(HttpStatusCode.OK, user)
+                call.respondJson(user)
             } else {
                 call.respond(HttpStatusCode.NotFound)
             }
