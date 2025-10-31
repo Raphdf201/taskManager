@@ -27,8 +27,4 @@ fun Application.configureHTTP() {
             }
         }
     }
-    install(DefaultHeaders) {
-        header(HttpHeaders.AccessControlAllowOrigin, "*")
-        header(HttpHeaders.AccessControlAllowMethods, "GET")
-    }
 }

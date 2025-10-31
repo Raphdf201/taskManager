@@ -21,11 +21,11 @@ fun Application.configureDatabases() {
     routing {
         get("/tasks") {
             val tasks = databaseService.getTasks()
-            call.respondJson(tasks)
+            call.respondText(Json.encodeToString(tasks))
         }
 
         post("/tasks") {
-            val task = call.receive<ExposedTask>()
+            val task = Json.decodeFromString<ExposedTask>(call.receiveText())
             val id = databaseService.createTask(task)
             call.respond(HttpStatusCode.Created, id)
         }
@@ -40,7 +40,7 @@ fun Application.configureDatabases() {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val user = databaseService.getUser(id)
             if (user != null) {
-                call.respondJson(user)
+                call.respondText(Json.encodeToString(user))
             } else {
                 call.respond(HttpStatusCode.NotFound)
             }
