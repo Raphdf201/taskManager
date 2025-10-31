@@ -5,6 +5,7 @@ import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.cachingheaders.*
 import io.ktor.server.plugins.compression.*
+import io.ktor.server.plugins.defaultheaders.DefaultHeaders
 import io.ktor.server.plugins.forwardedheaders.*
 import io.ktor.server.plugins.httpsredirect.*
 
@@ -25,5 +26,9 @@ fun Application.configureHTTP() {
                 else -> null
             }
         }
+    }
+    install(DefaultHeaders) {
+        header(HttpHeaders.AccessControlAllowOrigin, "*")
+        header(HttpHeaders.AccessControlAllowMethods, "GET")
     }
 }
