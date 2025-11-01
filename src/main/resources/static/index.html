@@ -20,7 +20,7 @@
     </div>
 
     <div class="stats-grid">
-        <div class="stat-card">
+        <div class="stat-card" onclick="filterTasks('all')" style="cursor: pointer;">
             <div class="stat-content">
                 <h3>Total</h3>
                 <p id="stat-total" style="color: #1e293b;">8</p>
@@ -29,7 +29,7 @@
                 <i data-lucide="tag" style="color: #64748b; width: 50px; height: 50px;"></i>
             </div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" onclick="filterTasks('todo')" style="cursor: pointer;">
             <div class="stat-content">
                 <h3>À faire</h3>
                 <p id="stat-todo" style="color: #ff999c;">3</p>
@@ -38,7 +38,7 @@
                 <i data-lucide="circle" style="color: #64748b; width: 50px; height: 50px;"></i>
             </div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" onclick="filterTasks('in_progress')" style="cursor: pointer;">
             <div class="stat-content">
                 <h3>En cours</h3>
                 <p id="stat-progress" style="color: #3b82f6;">3</p>
@@ -47,7 +47,7 @@
                 <i data-lucide="clock" style="color: #3b82f6; width: 50px; height: 50px;"></i>
             </div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" onclick="filterTasks('done')" style="cursor: pointer;">
             <div class="stat-content">
                 <h3>Terminées</h3>
                 <p id="stat-done" style="color: #10b981;">2</p>
@@ -57,7 +57,6 @@
             </div>
         </div>
     </div>
-
     <!-- Floating Add Button -->
     <button class="floating-add-btn" onclick="openModal()"></button>
 

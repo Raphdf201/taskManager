@@ -1,5 +1,7 @@
 let lastScroll = 0;
 const header = document.querySelector('.header');
+let currentFilter = 'all'; // Track current filter
+let allTasks = []; // Store all tasks
 
 function checkVisibility() {
     const tasks = document.querySelectorAll('.task-card');
@@ -8,14 +10,11 @@ function checkVisibility() {
         const taskBottom = task.getBoundingClientRect().bottom;
         const windowHeight = window.innerHeight;
 
-        // Show when scrolling into view
         if (taskTop < windowHeight - 1 && taskBottom > 0) {
             setTimeout(() => {
                 task.classList.add('visible');
             }, index * 75);
-        }
-        // Hide when scrolling out of view
-        else if (taskBottom < 0 || taskTop > windowHeight) {
+        } else if (taskBottom < 0 || taskTop > windowHeight) {
             task.classList.remove('visible');
         }
     });
@@ -43,13 +42,9 @@ function closeModal() {
 }
 
 const API_URL = 'https://commtasks.raphdf201.net/tasks';
+const USERS_API_URL = 'https://commtasks.raphdf201.net/users';
 
-const creatorData = {
-    1: { name: 'Sophie Martin', color: '#ec4899', initials: 'SM' },
-    2: { name: 'Lucas Dubois', color: '#6366f1', initials: 'LD' },
-    3: { name: 'Marie Lefebvre', color: '#06b6d4', initials: 'ML' },
-    4: { name: 'Thomas Bernard', color: '#f59e0b', initials: 'TB' }
-};
+let creatorData = {};
 
 function isOverdue(dueDate) {
     const today = new Date();
@@ -57,6 +52,75 @@ function isOverdue(dueDate) {
     const due = new Date(dueDate);
     due.setHours(0, 0, 0, 0);
     return due < today;
+}
+
+function getTaskStatus(task) {
+    if (task.status === 'done') return 'done';
+    if (isOverdue(task.dueDate)) return 'in_progress';
+    return 'todo';
+}
+
+function getInitials(name) {
+    return name
+        .split(' ')
+        .map(word => word[0])
+        .join('')
+        .toUpperCase()
+        .substring(0, 2);
+}
+
+function getRandomColor(index) {
+    const colors = ['#ec4899', '#6366f1', '#06b6d4', '#f59e0b', '#8b5cf6', '#10b981', '#ef4444', '#f97316'];
+    return colors[index % colors.length];
+}
+
+async function fetchUsers() {
+    try {
+        const response = await fetch(USERS_API_URL);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const users = await response.json();
+
+        // Transform users array into creatorData object
+        users.forEach((user, index) => {
+            creatorData[index + 1] = {
+                name: user.name,
+                profileIcon: user.profileIcon,
+                color: getRandomColor(index),
+                initials: getInitials(user.name)
+            };
+        });
+
+        // Populate the assignee dropdown
+        populateAssigneeDropdown(users);
+
+        console.log('Users loaded:', creatorData);
+
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        // Fallback to default users if API fails
+        creatorData = {
+            1: { name: 'User 1', color: '#ec4899', initials: 'U1' }
+        };
+    }
+}
+
+function populateAssigneeDropdown(users) {
+    const dropdown = document.getElementById('task-assignee');
+
+    // Clear existing options except the first one
+    dropdown.innerHTML = '<option value="">Sélectionner un membre</option>';
+
+    // Add users to dropdown
+    users.forEach((user, index) => {
+        const option = document.createElement('option');
+        option.value = index + 1;
+        option.textContent = user.name;
+        dropdown.appendChild(option);
+    });
 }
 
 function formatDate(dateString) {
@@ -94,43 +158,49 @@ function createTaskCard(task) {
     const creator = creatorData[task.creatorId] || {
         name: `User ${task.creatorId}`,
         color: '#64748b',
-        initials: 'U' + task.creatorId
+        initials: 'U' + task.creatorId,
+        profileIcon: null
     };
 
+    // Use profile icon if available, otherwise use avatar with initials
+    const avatarHTML = creator.profileIcon
+        ? `<img src="${creator.profileIcon}" alt="${creator.name}" class="avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">`
+        : `<div class="avatar" style="background: ${creator.color};">${creator.initials}</div>`;
+
     return `
-            <div class="task-card">
-                <div class="task-content">
-                    <div class="task-main">
-                        <div class="task-header">
-                            <i data-lucide="${statusIcon}"
-                               style="width: 20px; height: 20px; color: ${statusColor}; flex-shrink: 0; margin-top: 2px;"></i>
-                            <div style="flex: 1;">
-                                <div class="task-title">${task.title}</div>
-                                <div class="task-description">${task.description}</div>
-                                <div class="task-meta">
-                                    <div class="member-info">
-                                        <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748b;"></i>
-                                        <span>${formatDate(task.dueDate)}</span>
-                                    </div>
-                                    <div class="member-info">
-                                        <div class="avatar" style="background: ${creator.color};">${creator.initials}</div>
-                                        <span>${creator.name}</span>
-                                    </div>
+        <div class="task-card" data-task-id="${task.id}">
+            <div class="task-content">
+                <div class="task-main">
+                    <div class="task-header">
+                        <i data-lucide="${statusIcon}"
+                           style="width: 20px; height: 20px; color: ${statusColor}; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div style="flex: 1;">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-description">${task.description}</div>
+                            <div class="task-meta">
+                                <div class="member-info">
+                                    <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748b;"></i>
+                                    <span>${formatDate(task.dueDate)}</span>
+                                </div>
+                                <div class="member-info">
+                                    ${avatarHTML}
+                                    <span>${creator.name}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="task-actions">
-                        <button class="btn-icon btn-edit">
-                            <i data-lucide="edit-2" style="width: 16px; height: 16px;"></i>
-                        </button>
-                        <button class="btn-icon btn-delete">
-                            <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
-                        </button>
-                    </div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn-icon btn-edit" onclick="editTask(${task.id})">
+                        <i data-lucide="edit-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                    <button class="btn-icon btn-delete" onclick="deleteTask(${task.id})">
+                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                    </button>
                 </div>
             </div>
-        `;
+        </div>
+    `;
 }
 
 async function fetchTasks() {
@@ -144,27 +214,97 @@ async function fetchTasks() {
         }
 
         const tasks = await response.json();
+        allTasks = tasks; // Store all tasks globally
 
-        if (tasks.length === 0) {
-            container.innerHTML = '<div style="text-align: center; padding: 2rem;">No tasks found</div>';
-            return;
-        }
+        // Update stats
+        updateStats(tasks);
 
-        container.innerHTML = tasks.map(task => createTaskCard(task)).join('');
-
-        // Initialize Lucide icons
-        if (window.lucide) {
-            lucide.createIcons();
-        }
+        // Filter and display tasks
+        displayFilteredTasks();
 
     } catch (error) {
         console.error('Error fetching tasks:', error);
         container.innerHTML = `
-                <div style="text-align: center; padding: 2rem; color: #ef4444;">
-                    Error loading tasks: ${error.message}
-                </div>
-            `;
+            <div style="text-align: center; padding: 2rem; color: #ef4444;">
+                Erreur lors du chargement des tâches: ${error.message}
+            </div>
+        `;
     }
+}
+
+function updateStats(tasks) {
+    const stats = {
+        total: tasks.length,
+        todo: 0,
+        in_progress: 0,
+        done: 0
+    };
+
+    tasks.forEach(task => {
+        const status = getTaskStatus(task);
+        if (status === 'done') stats.done++;
+        else if (status === 'in_progress') stats.in_progress++;
+        else stats.todo++;
+    });
+
+    document.getElementById('stat-total').textContent = stats.total;
+    document.getElementById('stat-todo').textContent = stats.todo;
+    document.getElementById('stat-progress').textContent = stats.in_progress;
+    document.getElementById('stat-done').textContent = stats.done;
+}
+
+function displayFilteredTasks() {
+    const container = document.getElementById('tasks-container');
+
+    let filteredTasks = allTasks;
+
+    if (currentFilter !== 'all') {
+        filteredTasks = allTasks.filter(task => getTaskStatus(task) === currentFilter);
+    }
+
+    if (filteredTasks.length === 0) {
+        const filterLabel = {
+            'all': 'Aucune tâche trouvée',
+            'todo': 'Aucune tâche à faire',
+            'in_progress': 'Aucune tâche en cours',
+            'done': 'Aucune tâche terminée'
+        };
+        container.innerHTML = `<div style="text-align: center; padding: 2rem;">${filterLabel[currentFilter]}</div>`;
+        return;
+    }
+
+    container.innerHTML = filteredTasks.map(task => createTaskCard(task)).join('');
+
+    // Initialize Lucide icons
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+
+    // Trigger visibility check after rendering
+    setTimeout(() => checkVisibility(), 100);
+}
+
+function filterTasks(filter) {
+    currentFilter = filter;
+
+    // Update active state on stat cards
+    document.querySelectorAll('.stat-card').forEach(card => {
+        card.classList.remove('active-filter');
+    });
+
+    const filterMap = {
+        'all': 0,
+        'todo': 1,
+        'in_progress': 2,
+        'done': 3
+    };
+
+    const activeCard = document.querySelectorAll('.stat-card')[filterMap[filter]];
+    if (activeCard) {
+        activeCard.classList.add('active-filter');
+    }
+
+    displayFilteredTasks();
 }
 
 async function submitTask(event) {
@@ -179,26 +319,12 @@ async function submitTask(event) {
     submitBtn.textContent = 'Envoi en cours...';
 
     try {
-        // Send OPTIONS request first to check CORS
-        const optionsResponse = await fetch(API_URL, {
-            method: 'OPTIONS',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        });
-
-        console.log('OPTIONS response:', {
-            status: optionsResponse.status,
-            allowedMethods: optionsResponse.headers.get('Access-Control-Allow-Methods'),
-            allowedHeaders: optionsResponse.headers.get('Access-Control-Allow-Headers'),
-            allowOrigin: optionsResponse.headers.get('Access-Control-Allow-Origin')
-        });
-
         const taskData = {
             title: document.getElementById('task-title').value,
             description: document.getElementById('task-description').value,
             dueDate: document.getElementById('task-date').value,
+            status: document.getElementById('task-status').value || 'todo',
+            priority: document.getElementById('task-priority').value || 'medium',
             creatorId: parseInt(document.getElementById('task-assignee').value) || 1
         };
 
@@ -230,8 +356,7 @@ async function submitTask(event) {
     } catch (error) {
         console.error('Error creating task:', error);
 
-        // Check if it's a CORS error
-        if (error.message.includes('Failed to fetch')) {
+        if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
             alert('Erreur CORS: Le serveur doit autoriser les requêtes depuis votre domaine.\n\nVérifiez que votre API autorise les CORS headers.');
         } else {
             alert('Erreur lors de la création de la tâche: ' + error.message);
@@ -242,7 +367,65 @@ async function submitTask(event) {
     }
 }
 
-// Load tasks when page loads
-fetchTasks();
+async function deleteTask(taskId) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')) {
+        return;
+    }
 
-lucide.createIcons();
+    try {
+        console.log('Deleting task:', taskId);
+
+        const response = await fetch(`${API_URL}/${taskId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        console.log('Task deleted successfully:', taskId);
+
+        // Add fade out animation before removing
+        const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+        if (taskCard) {
+            taskCard.style.transition = 'all 0.3s ease';
+            taskCard.style.opacity = '0';
+            taskCard.style.transform = 'translateX(-100px)';
+
+            setTimeout(async () => {
+                await fetchTasks();
+            }, 300);
+        } else {
+            await fetchTasks();
+        }
+
+    } catch (error) {
+        console.error('Error deleting task:', error);
+
+        if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
+            alert('Erreur CORS: Le serveur doit autoriser les requêtes depuis votre domaine.');
+        } else {
+            alert('Erreur lors de la suppression de la tâche: ' + error.message);
+        }
+    }
+}
+
+function editTask(taskId) {
+    console.log('Edit task:', taskId);
+    alert('Fonctionnalité d\'édition à venir!\n\nID de la tâche: ' + taskId);
+}
+
+// Load users and tasks when page loads
+document.addEventListener('DOMContentLoaded', async () => {
+    await fetchUsers(); // Load users first
+    await fetchTasks(); // Then load tasks
+    lucide.createIcons();
+});
+
+// Initialize Lucide icons
+if (window.lucide) {
+    lucide.createIcons();
+}
