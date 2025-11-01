@@ -10,23 +10,24 @@ import org.jetbrains.exposed.sql.transactions.transaction
 @Serializable
 data class ExposedUser(
     val name: String,
-    val role: String
+    val profileIcon: String
 )
 
 @Serializable
 data class ExposedTask(
     val title: String,
     val description: String,
-    val createdDate: String,
-    val dueDate: String,
-    val creatorId: Int
+    val priority: String,
+    val projectId: Int?,
+    val assigneeId: Int?,
+    val dueDate: String?
 )
 
 class DatabaseService(database: Database) {
     object Users : Table() {
         val id = integer("id").autoIncrement()
         val name = varchar("name", 50)
-        val role = varchar("role", 10)
+        val profileIcon = varchar("role", 100)
 
         override val primaryKey = PrimaryKey(id)
     }
@@ -35,9 +36,10 @@ class DatabaseService(database: Database) {
         val id = integer("id").autoIncrement()
         val title = varchar("title", 50)
         val description = varchar("description", 500)
-        val createdDate = varchar("createdDate", 10)
-        val dueDate = varchar("dueDate", 10)
-        val creatorId = integer("creatorId")
+        val priority = varchar("priority", 10)
+        val projectId = integer("projectId").nullable()
+        val assigneId = integer("assigneeId").nullable()
+        val dueDate = varchar("dueDate", 10).nullable()
 
         override val primaryKey = PrimaryKey(id)
     }
@@ -51,7 +53,7 @@ class DatabaseService(database: Database) {
     suspend fun createUser(user: ExposedUser): Int = dbQuery {
         Users.insert {
             it[name] = user.name
-            it[role] = user.role
+            it[profileIcon] = user.profileIcon
         }[Users.id]
     }
 
@@ -59,9 +61,10 @@ class DatabaseService(database: Database) {
         Tasks.insert {
             it[title] = task.title
             it[description] = task.description
-            it[createdDate] = task.createdDate
+            it[priority] = task.priority
+            it[projectId] = task.projectId
+            it[assigneId] = task.assigneeId
             it[dueDate] = task.dueDate
-            it[creatorId] = task.creatorId
         }[Tasks.id]
     }
 
@@ -69,7 +72,7 @@ class DatabaseService(database: Database) {
         return dbQuery {
             Users.selectAll()
                 .where { Users.id eq id }
-                .map { ExposedUser(it[Users.name], it[Users.role]) }
+                .map { ExposedUser(it[Users.name], it[Users.profileIcon]) }
                 .singleOrNull()
         }
     }
@@ -82,12 +85,25 @@ class DatabaseService(database: Database) {
                     ExposedTask(
                         it[Tasks.title],
                         it[Tasks.description],
-                        it[Tasks.createdDate],
-                        it[Tasks.dueDate],
-                        it[Tasks.creatorId]
+                        it[Tasks.priority],
+                        it[Tasks.projectId],
+                        it[Tasks.assigneId],
+                        it[Tasks.dueDate]
                     )
                 }
                 .singleOrNull()
+        }
+    }
+
+    suspend fun getUsers(): List<ExposedUser> {
+        return dbQuery {
+            Tasks.selectAll()
+                .map {
+                    ExposedUser(
+                        it[Users.name],
+                        it[Users.profileIcon],
+                    )
+                }
         }
     }
 
@@ -98,9 +114,10 @@ class DatabaseService(database: Database) {
                     ExposedTask(
                         it[Tasks.title],
                         it[Tasks.description],
-                        it[Tasks.createdDate],
-                        it[Tasks.dueDate],
-                        it[Tasks.creatorId]
+                        it[Tasks.priority],
+                        it[Tasks.projectId],
+                        it[Tasks.assigneId],
+                        it[Tasks.dueDate]
                     )
                 }
         }
@@ -110,7 +127,7 @@ class DatabaseService(database: Database) {
         dbQuery {
             Users.update({ Users.id eq id }) {
                 it[name] = user.name
-                it[role] = user.role
+                it[profileIcon] = user.profileIcon
             }
         }
     }
@@ -120,9 +137,10 @@ class DatabaseService(database: Database) {
             Tasks.update({ Tasks.id eq id }) {
                 it[title] = task.title
                 it[description] = task.description
-                it[createdDate] = task.createdDate
+                it[priority] = task.priority
+                it[projectId] = task.projectId
+                it[assigneId] = task.assigneeId
                 it[dueDate] = task.dueDate
-                it[creatorId] = task.creatorId
             }
         }
     }
