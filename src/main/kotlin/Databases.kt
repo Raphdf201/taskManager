@@ -25,13 +25,15 @@ fun Application.configureDatabases() {
         }
 
         post("/tasks") {
-            val task = Json.decodeFromString<ExposedTask>(call.receiveText())
+            // val task = Json.decodeFromString<ExposedTask>(call.receiveText())
+            val task = call.receive<ExposedTask>()
             val id = databaseService.createTask(task)
             call.respond(HttpStatusCode.Created, id)
         }
 
         post("/users") {
-            val user = Json.decodeFromString<ExposedUser>(call.receiveText())
+            // val user = Json.decodeFromString<ExposedUser>(call.receiveText())
+            val user = call.receive<ExposedUser>()
             val id = databaseService.createUser(user)
             call.respond(HttpStatusCode.Created, id)
         }
