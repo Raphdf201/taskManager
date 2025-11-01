@@ -18,9 +18,9 @@ data class ExposedTask(
     val title: String,
     val description: String,
     val priority: String,
-    val projectId: Int?,
-    val assigneeId: Int?,
-    val dueDate: String?
+    val status: String,
+    val creatorId: Int,
+    val dueDate: String
 )
 
 class DatabaseService(database: Database) {
@@ -37,9 +37,9 @@ class DatabaseService(database: Database) {
         val title = varchar("title", 50)
         val description = varchar("description", 500)
         val priority = varchar("priority", 10)
-        val projectId = integer("projectId").nullable()
-        val assigneId = integer("assigneeId").nullable()
-        val dueDate = varchar("dueDate", 10).nullable()
+        val status = varchar("status", 20)
+        val creatorId = integer("creatorId")
+        val dueDate = varchar("dueDate", 10)
 
         override val primaryKey = PrimaryKey(id)
     }
@@ -62,8 +62,8 @@ class DatabaseService(database: Database) {
             it[title] = task.title
             it[description] = task.description
             it[priority] = task.priority
-            it[projectId] = task.projectId
-            it[assigneId] = task.assigneeId
+            it[status] = task.status
+            it[creatorId] = task.creatorId
             it[dueDate] = task.dueDate
         }[Tasks.id]
     }
@@ -86,8 +86,8 @@ class DatabaseService(database: Database) {
                         it[Tasks.title],
                         it[Tasks.description],
                         it[Tasks.priority],
-                        it[Tasks.projectId],
-                        it[Tasks.assigneId],
+                        it[Tasks.status],
+                        it[Tasks.creatorId],
                         it[Tasks.dueDate]
                     )
                 }
@@ -115,8 +115,8 @@ class DatabaseService(database: Database) {
                         it[Tasks.title],
                         it[Tasks.description],
                         it[Tasks.priority],
-                        it[Tasks.projectId],
-                        it[Tasks.assigneId],
+                        it[Tasks.status],
+                        it[Tasks.creatorId],
                         it[Tasks.dueDate]
                     )
                 }
@@ -138,8 +138,8 @@ class DatabaseService(database: Database) {
                 it[title] = task.title
                 it[description] = task.description
                 it[priority] = task.priority
-                it[projectId] = task.projectId
-                it[assigneId] = task.assigneeId
+                it[status] = task.status
+                it[creatorId] = task.creatorId
                 it[dueDate] = task.dueDate
             }
         }
