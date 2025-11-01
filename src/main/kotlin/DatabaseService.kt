@@ -27,7 +27,7 @@ class DatabaseService(database: Database) {
     object Users : Table() {
         val id = integer("id").autoIncrement()
         val name = varchar("name", 50)
-        val profileIcon = varchar("role", 100)
+        val profileIcon = varchar("profileIcon", 100)
 
         override val primaryKey = PrimaryKey(id)
     }
