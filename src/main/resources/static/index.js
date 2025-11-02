@@ -2,6 +2,8 @@ let lastScroll = 0;
 const header = document.querySelector('.header');
 let currentFilter = 'all'; // Track current filter
 let allTasks = []; // Store all tasks
+let isEditMode = false;
+let editingTaskId = null;
 
 function checkVisibility() {
     const tasks = document.querySelectorAll('.task-card');
@@ -34,11 +36,19 @@ window.addEventListener('scroll', () => {
 });
 
 function openModal() {
+    isEditMode = false;
+    editingTaskId = null;
+    document.getElementById('modal-title').textContent = 'Nouvelle tâche';
+    document.getElementById('submit-btn').textContent = 'Créer la tâche';
+    document.getElementById('task-form').reset();
     document.getElementById('modal').classList.add('active');
 }
 
 function closeModal() {
     document.getElementById('modal').classList.remove('active');
+    isEditMode = false;
+    editingTaskId = null;
+    document.getElementById('task-form').reset();
 }
 
 const API_URL = 'https://commtasks.raphdf201.net/tasks';
@@ -56,7 +66,8 @@ function isOverdue(dueDate) {
 
 function getTaskStatus(task) {
     if (task.status === 'done') return 'done';
-    if (isOverdue(task.dueDate)) return 'in_progress';
+    if (task.status === 'in_progress') return 'in_progress';
+    if (isOverdue(task.dueDate) && task.status !== 'done') return 'in_progress';
     return 'todo';
 }
 
@@ -139,17 +150,17 @@ function formatDate(dateString) {
 }
 
 function getStatusIcon(task) {
-    if (isOverdue(task.dueDate)) {
-        return 'clock';
-    }
+    const status = getTaskStatus(task);
+    if (status === 'done') return 'check-circle-2';
+    if (status === 'in_progress') return 'clock';
     return 'circle';
 }
 
 function getStatusColor(task) {
-    if (isOverdue(task.dueDate)) {
-        return '#3b82f6';
-    }
-    return '#64748b';
+    const status = getTaskStatus(task);
+    if (status === 'done') return '#10b981';
+    if (status === 'in_progress') return '#3b82f6';
+    return '#ff999c';
 }
 
 function createTaskCard(task) {
@@ -316,7 +327,7 @@ async function submitTask(event) {
     const originalText = submitBtn.textContent;
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Envoi en cours...';
+    submitBtn.textContent = isEditMode ? 'Mise à jour...' : 'Envoi en cours...';
 
     try {
         const taskData = {
@@ -330,8 +341,11 @@ async function submitTask(event) {
 
         console.log('Sending task data:', taskData);
 
-        const response = await fetch(API_URL, {
-            method: 'POST',
+        const url = isEditMode ? `${API_URL}/${editingTaskId}` : API_URL;
+        const method = isEditMode ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+            method: method,
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -345,7 +359,7 @@ async function submitTask(event) {
         }
 
         const result = await response.json();
-        console.log('Task created successfully:', result);
+        console.log(isEditMode ? 'Task updated successfully:' : 'Task created successfully:', result);
 
         closeModal();
         document.getElementById('task-form').reset();
@@ -354,12 +368,12 @@ async function submitTask(event) {
         await fetchTasks();
 
     } catch (error) {
-        console.error('Error creating task:', error);
+        console.error('Error saving task:', error);
 
         if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
             alert('Erreur CORS: Le serveur doit autoriser les requêtes depuis votre domaine.\n\nVérifiez que votre API autorise les CORS headers.');
         } else {
-            alert('Erreur lors de la création de la tâche: ' + error.message);
+            alert('Erreur lors de la sauvegarde de la tâche: ' + error.message);
         }
     } finally {
         submitBtn.disabled = false;
@@ -413,9 +427,35 @@ async function deleteTask(taskId) {
     }
 }
 
-function editTask(taskId) {
+async function editTask(taskId) {
     console.log('Edit task:', taskId);
-    alert('Fonctionnalité d\'édition à venir!\n\nID de la tâche: ' + taskId);
+
+    // Find the task in allTasks
+    const task = allTasks.find(t => t.id === taskId);
+
+    if (!task) {
+        alert('Tâche non trouvée');
+        return;
+    }
+
+    // Set edit mode
+    isEditMode = true;
+    editingTaskId = taskId;
+
+    // Update modal title and button text
+    document.getElementById('modal-title').textContent = 'Modifier la tâche';
+    document.getElementById('submit-btn').textContent = 'Mettre à jour';
+
+    // Populate form with task data
+    document.getElementById('task-title').value = task.title;
+    document.getElementById('task-description').value = task.description;
+    document.getElementById('task-date').value = task.dueDate;
+    document.getElementById('task-status').value = task.status;
+    document.getElementById('task-priority').value = task.priority;
+    document.getElementById('task-assignee').value = task.creatorId;
+
+    // Open modal
+    document.getElementById('modal').classList.add('active');
 }
 
 // Load users and tasks when page loads
