@@ -5,7 +5,7 @@ const val DBUSER = "taskmgr"
 const val DBDRIVER = "org.mariadb.jdbc.Driver"
 const val DBPW = "TaskManagerPw124!"
 
-const val AUTHCALLBACK = "http://localhost:8080/callback"
+const val AUTHCALLBACK = "https://commtasks.raphdf201.net/callback"
 const val AUTHNAME = "google"
 const val AUTHAUTHORIZEURL = "https://accounts.google.com/o/oauth2/auth"
 const val AUTHACCESSTOKENURL = "https://accounts.google.com/o/oauth2/token"
