@@ -15,7 +15,7 @@ body {
     background-size: 400% 400%;
     animation: waveGradient 10s ease infinite;
     min-height: 100vh;
-    padding-top: 120px;
+    padding-top: 140px;
 }
 
 @keyframes waveGradient {
@@ -160,9 +160,9 @@ body {
     grid-template-columns: repeat(2, 1fr);
     gap: 32px;
     align-content: center;
-    padding: 0 48px;
+    padding: 20px 48px;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
+    overflow: visible;
     max-height: 1000px;
     opacity: 1;
 }
@@ -688,6 +688,21 @@ body {
     gap: 8px;
 }
 
+.member-info.date-badge {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 2px solid #e2e8f0;
+    padding: 6px 12px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.member-info.date-badge:hover {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
 .member-info span {
     font-size: 14px;
     color: #64748b;
@@ -734,7 +749,7 @@ body {
 @media (max-width: 768px) {
     .stats-grid {
         grid-template-columns: 1fr;
-        padding: 0 24px;
+        padding: 20px 24px;
     }
 
     .tasks-list {
