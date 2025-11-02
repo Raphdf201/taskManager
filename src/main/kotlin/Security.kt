@@ -1,59 +1,78 @@
 package net.raphdf201
 
-import io.ktor.client.*
-import io.ktor.client.engine.apache.*
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
-import io.ktor.server.sessions.*
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.apache.Apache
+import io.ktor.http.HttpMethod
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.auth.OAuthAccessTokenResponse
+import io.ktor.server.auth.OAuthServerSettings
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.authentication
+import io.ktor.server.auth.oauth
+import io.ktor.server.response.respondRedirect
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
+import io.ktor.server.sessions.Sessions
+import io.ktor.server.sessions.clear
+import io.ktor.server.sessions.cookie
+import io.ktor.server.sessions.sessions
+import io.ktor.server.sessions.set
 import kotlinx.serialization.Serializable
 
 fun Application.configureSecurity() {
     install(Sessions) {
-        cookie<MySession>("MY_SESSION") {
+        cookie<UserSession>("techTaskManager") {
             cookie.extensions["SameSite"] = "lax"
         }
     }
     authentication {
         oauth("auth-oauth-google") {
-            urlProvider = { "http://localhost:8080/callback" }
+            urlProvider = { AUTHCALLBACK }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
-                    name = "google",
-                    authorizeUrl = "https://accounts.google.com/o/oauth2/auth",
-                    accessTokenUrl = "https://accounts.google.com/o/oauth2/token",
+                    name = AUTHNAME,
+                    authorizeUrl = AUTHAUTHORIZEURL,
+                    accessTokenUrl = AUTHACCESSTOKENURL,
                     requestMethod = HttpMethod.Post,
-                    clientId = System.getenv("GOOGLE_CLIENT_ID"),
-                    clientSecret = System.getenv("GOOGLE_CLIENT_SECRET"),
-                    defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.profile")
+                    clientId = AUTHCLIENTID,
+                    clientSecret = AUTHCLIENTSECRET,
+                    defaultScopes = AUTHDEFAULTSCOPES
                 )
             }
             client = HttpClient(Apache)
         }
     }
+
     routing {
-        get("/session/increment") {
-            val session = call.sessions.get<MySession>() ?: MySession()
-            call.sessions.set(session.copy(count = session.count + 1))
-            call.respondText("Counter is ${session.count}. Refresh to increment.")
-        }
         authenticate("auth-oauth-google") {
-            get("login") {
-                call.respondRedirect("/callback")
+            get("/login") {
+                // OAuth will handle the redirect automatically
             }
 
             get("/callback") {
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.authentication.principal()
-                call.sessions.set(UserSession(principal?.accessToken.toString()))
-                call.respondRedirect("/hello")
+                if (principal != null) {
+                    call.sessions.set(UserSession(
+                        isLoggedIn = true,
+                        accessToken = principal.accessToken
+                    ))
+                    call.respondRedirect("/hello")
+                } else {
+                    call.respondRedirect("/login")
+                }
             }
+        }
+
+        get("/logout") {
+            call.sessions.clear<UserSession>()
+            call.respondRedirect("/")
         }
     }
 }
 
 @Serializable
-data class MySession(val count: Int = 0)
-
-class UserSession(accessToken: String)
+data class UserSession(
+    val isLoggedIn: Boolean = false,
+    val accessToken: String? = null
+)

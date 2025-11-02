@@ -11,10 +11,10 @@ import org.jetbrains.exposed.sql.Database
 fun Application.configureDatabases() {
     val database =
         Database.connect(
-            url = "jdbc:mariadb://raw.raphdf201.net:3306/taskmanager",
-            user = "taskmgr",
-            driver = "org.mariadb.jdbc.Driver",
-            password = "TaskManagerPw124!",
+            url = DBURL,
+            user = DBUSER,
+            driver = DBDRIVER,
+            password = DBPW,
         )
 
     val databaseService = DatabaseService(database)
@@ -55,6 +55,13 @@ fun Application.configureDatabases() {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val user = call.receive<ExposedUserSend>()
             databaseService.updateUser(id, user)
+            call.respond(HttpStatusCode.OK)
+        }
+
+        put("/tasks/{id}") {
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+            val task = call.receive<ExposedTaskSend>()
+            databaseService.updateTask(id, task)
             call.respond(HttpStatusCode.OK)
         }
 
