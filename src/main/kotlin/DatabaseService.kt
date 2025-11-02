@@ -8,13 +8,31 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @Serializable
-data class ExposedUser(
+data class ExposedUserSend(
+    val id: Int,
     val name: String,
     val profileIcon: String
 )
 
 @Serializable
-data class ExposedTask(
+data class ExposedUserReceive(
+    val name: String,
+    val profileIcon: String
+)
+
+@Serializable
+data class ExposedTaskSend(
+    val id: Int,
+    val title: String,
+    val description: String,
+    val priority: String,
+    val status: String,
+    val creatorId: Int,
+    val dueDate: String
+)
+
+@Serializable
+data class ExposedTaskReceive(
     val title: String,
     val description: String,
     val priority: String,
@@ -50,14 +68,14 @@ class DatabaseService(database: Database) {
         }
     }
 
-    suspend fun createUser(user: ExposedUser): Int = dbQuery {
+    suspend fun createUser(user: ExposedUserReceive): Int = dbQuery {
         Users.insert {
             it[name] = user.name
             it[profileIcon] = user.profileIcon
         }[Users.id]
     }
 
-    suspend fun createTask(task: ExposedTask): Int = dbQuery {
+    suspend fun createTask(task: ExposedTaskReceive): Int = dbQuery {
         Tasks.insert {
             it[title] = task.title
             it[description] = task.description
@@ -68,21 +86,26 @@ class DatabaseService(database: Database) {
         }[Tasks.id]
     }
 
-    suspend fun getUser(id: Int): ExposedUser? {
+    suspend fun getUser(id: Int): ExposedUserSend? {
         return dbQuery {
             Users.selectAll()
                 .where { Users.id eq id }
-                .map { ExposedUser(it[Users.name], it[Users.profileIcon]) }
+                .map { ExposedUserSend(
+                    it[Users.id],
+                    it[Users.name],
+                    it[Users.profileIcon]
+                ) }
                 .singleOrNull()
         }
     }
 
-    suspend fun getTask(id: Int): ExposedTask? {
+    suspend fun getTask(id: Int): ExposedTaskSend? {
         return dbQuery {
             Tasks.selectAll()
                 .where { Tasks.id eq id }
                 .map {
-                    ExposedTask(
+                    ExposedTaskSend(
+                        it[Tasks.id],
                         it[Tasks.title],
                         it[Tasks.description],
                         it[Tasks.priority],
@@ -95,11 +118,12 @@ class DatabaseService(database: Database) {
         }
     }
 
-    suspend fun getUsers(): List<ExposedUser> {
+    suspend fun getUsers(): List<ExposedUserSend> {
         return dbQuery {
             Tasks.selectAll()
                 .map {
-                    ExposedUser(
+                    ExposedUserSend(
+                        it[Users.id],
                         it[Users.name],
                         it[Users.profileIcon],
                     )
@@ -107,11 +131,12 @@ class DatabaseService(database: Database) {
         }
     }
 
-    suspend fun getTasks(): List<ExposedTask> {
+    suspend fun getTasks(): List<ExposedTaskSend> {
         return dbQuery {
             Tasks.selectAll()
                 .map {
-                    ExposedTask(
+                    ExposedTaskSend(
+                        it[Tasks.id],
                         it[Tasks.title],
                         it[Tasks.description],
                         it[Tasks.priority],
@@ -123,7 +148,7 @@ class DatabaseService(database: Database) {
         }
     }
 
-    suspend fun updateUser(id: Int, user: ExposedUser) {
+    suspend fun updateUser(id: Int, user: ExposedUserSend) {
         dbQuery {
             Users.update({ Users.id eq id }) {
                 it[name] = user.name
@@ -132,7 +157,7 @@ class DatabaseService(database: Database) {
         }
     }
 
-    suspend fun updateTask(id: Int, task: ExposedTask) {
+    suspend fun updateTask(id: Int, task: ExposedTaskSend) {
         dbQuery {
             Tasks.update({ Tasks.id eq id }) {
                 it[title] = task.title

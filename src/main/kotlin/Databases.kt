@@ -25,7 +25,7 @@ fun Application.configureDatabases() {
         }
 
         post("/tasks") {
-            val task = call.receive<ExposedTask>()
+            val task = call.receive<ExposedTaskReceive>()
             val id = databaseService.createTask(task)
             call.respond(HttpStatusCode.Created, id)
         }
@@ -36,7 +36,7 @@ fun Application.configureDatabases() {
         }
 
         post("/users") {
-            val user = call.receive<ExposedUser>()
+            val user = call.receive<ExposedUserReceive>()
             val id = databaseService.createUser(user)
             call.respond(HttpStatusCode.Created, id)
         }
@@ -53,7 +53,7 @@ fun Application.configureDatabases() {
 
         put("/users/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            val user = call.receive<ExposedUser>()
+            val user = call.receive<ExposedUserSend>()
             databaseService.updateUser(id, user)
             call.respond(HttpStatusCode.OK)
         }
