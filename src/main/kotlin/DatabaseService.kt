@@ -157,7 +157,7 @@ class DatabaseService(database: Database) {
         }
     }
 
-    suspend fun updateTask(id: Int, task: ExposedTaskSend) {
+    suspend fun updateTask(id: Int, task: ExposedTaskReceive) {
         dbQuery {
             Tasks.update({ Tasks.id eq id }) {
                 it[title] = task.title

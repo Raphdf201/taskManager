@@ -60,7 +60,7 @@ fun Application.configureDatabases() {
 
         put("/tasks/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            val task = call.receive<ExposedTaskSend>()
+            val task = call.receive<ExposedTaskReceive>()
             databaseService.updateTask(id, task)
             call.respond(HttpStatusCode.OK)
         }
