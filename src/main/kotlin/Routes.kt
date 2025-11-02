@@ -62,7 +62,7 @@ fun Application.configureDatabases() {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val task = call.receive<ExposedTaskReceive>()
             databaseService.updateTask(id, task)
-            call.respond(HttpStatusCode.OK)
+            call.respond(HttpStatusCode.OK, task)
         }
 
         delete("/users/{id}") {
