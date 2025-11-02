@@ -80,7 +80,14 @@ fun Application.configureDatabases() {
         }
 
         get("/testLogin") {
-            call.respondText("tk : ${call.sessions.get<UserSession>()?.accessToken}<br>lgin : ${call.sessions.get<UserSession>()?.isLoggedIn}")
+            val session = call.sessions.get<UserSession>()
+            call.respondText("tk : ${session?.accessToken}<br>lgin : ${session?.isLoggedIn}",
+                ContentType.Text.Html)
+        }
+
+        get("/isLoggedIn") {
+            val isLoggedIn = call.sessions.get<UserSession>()?.isLoggedIn ?: false
+            call.respond(if (isLoggedIn) HttpStatusCode.OK else HttpStatusCode.Unauthorized)
         }
     }
 }
