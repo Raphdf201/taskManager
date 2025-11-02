@@ -4,6 +4,30 @@ let currentFilter = 'all'; // Track current filter
 let allTasks = []; // Store all tasks
 let isEditMode = false;
 let editingTaskId = null;
+let statsVisible = true; // Track stats visibility
+
+function toggleStats() {
+    const statsGrid = document.querySelector('.stats-grid');
+    const headerLogo = document.querySelector('.header-logo');
+    const tasksList = document.querySelector('.tasks-list');
+
+    statsVisible = !statsVisible;
+
+    if (statsVisible) {
+        statsGrid.classList.remove('hidden');
+        headerLogo.classList.remove('stats-hidden');
+        tasksList.classList.remove('stats-hidden');
+    } else {
+        statsGrid.classList.add('hidden');
+        headerLogo.classList.add('stats-hidden');
+        tasksList.classList.add('stats-hidden');
+    }
+
+    // Trigger the logo animation
+    setTimeout(() => {
+        headerLogo.classList.remove('stats-hidden');
+    }, 500);
+}
 
 function checkVisibility() {
     const tasks = document.querySelectorAll('.task-card');
