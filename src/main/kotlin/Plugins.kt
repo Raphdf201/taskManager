@@ -4,11 +4,15 @@ import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.*
+import io.ktor.server.http.content.staticResources
 import io.ktor.server.plugins.cachingheaders.*
 import io.ktor.server.plugins.compression.*
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.forwardedheaders.*
 import io.ktor.server.plugins.httpsredirect.*
+import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.routing
 
 fun Application.configureHTTP() {
     install(HttpsRedirect) {
@@ -30,5 +34,13 @@ fun Application.configureHTTP() {
                 else -> null
             }
         }
+    }
+    install(StatusPages) {
+        exception<Throwable> { call, cause ->
+            call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
+        }
+    }
+    routing {
+        staticResources("/", "static")
     }
 }

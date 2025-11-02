@@ -28,16 +28,16 @@ fun Application.configureSecurity() {
     }
     authentication {
         oauth("auth-oauth-google") {
-            urlProvider = { AUTHCALLBACK }
+            urlProvider = { Constants.Auth.callback }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
-                    name = AUTHNAME,
-                    authorizeUrl = AUTHAUTHORIZEURL,
-                    accessTokenUrl = AUTHACCESSTOKENURL,
+                    name = Constants.Auth.name,
+                    authorizeUrl = Constants.Auth.authorizeUrl,
+                    accessTokenUrl = Constants.Auth.accessTokenUrl,
                     requestMethod = HttpMethod.Post,
-                    clientId = AUTHCLIENTID,
-                    clientSecret = AUTHCLIENTSECRET,
-                    defaultScopes = AUTHDEFAULTSCOPES
+                    clientId = Constants.Auth.clientId,
+                    clientSecret = Constants.Auth.clientSecret,
+                    defaultScopes = Constants.Auth.defaultScopes
                 )
             }
             client = HttpClient(Apache)
@@ -57,7 +57,7 @@ fun Application.configureSecurity() {
                         isLoggedIn = true,
                         accessToken = principal.accessToken
                     ))
-                    call.respondRedirect("/hello")
+                    call.respondRedirect("/testLogin")
                 } else {
                     call.respondRedirect("/login")
                 }
