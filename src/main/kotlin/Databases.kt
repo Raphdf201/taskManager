@@ -21,18 +21,21 @@ fun Application.configureDatabases() {
     routing {
         get("/tasks") {
             val tasks = databaseService.getTasks()
-            call.respondText(Json.encodeToString(tasks))
+            call.respond(tasks)
         }
 
         post("/tasks") {
-            // val task = Json.decodeFromString<ExposedTask>(call.receiveText())
             val task = call.receive<ExposedTask>()
             val id = databaseService.createTask(task)
             call.respond(HttpStatusCode.Created, id)
         }
 
+        get("/users") {
+            val users = databaseService.getUsers()
+            call.respond(users)
+        }
+
         post("/users") {
-            // val user = Json.decodeFromString<ExposedUser>(call.receiveText())
             val user = call.receive<ExposedUser>()
             val id = databaseService.createUser(user)
             call.respond(HttpStatusCode.Created, id)
