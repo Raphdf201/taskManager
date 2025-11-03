@@ -28,26 +28,27 @@ fun Application.configureDatabases() {
 
         post("/tasks") {
             val task = call.receive<ExposedTaskReceive>()
-            val id = databaseService.createTask(task)
-            call.respond(HttpStatusCode.Created, id)
+            call.authorizedActionWithMessage(HttpStatusCode.Created) {
+                databaseService.createTask(task)
+            }
         }
 
         get("/users") {
-            val users = databaseService.getUsers()
-            call.respond(users)
+            call.respond(databaseService.getUsers())
         }
 
         post("/users") {
             val user = call.receive<ExposedUserReceive>()
-            val id = databaseService.createUser(user)
-            call.respond(HttpStatusCode.Created, id)
+            call.authorizedActionWithMessage(HttpStatusCode.Created) {
+                databaseService.createUser(user)
+            }
         }
 
         get("/users/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val user = databaseService.getUser(id)
             if (user != null) {
-                call.respondText(Json.encodeToString(user))
+                call.respond(user)
             } else {
                 call.respond(HttpStatusCode.NotFound)
             }
@@ -56,27 +57,31 @@ fun Application.configureDatabases() {
         put("/users/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val user = call.receive<ExposedUserSend>()
-            databaseService.updateUser(id, user)
-            call.respond(HttpStatusCode.OK)
+            call.authorizedAction {
+                databaseService.updateUser(id, user)
+            }
         }
 
         put("/tasks/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val task = call.receive<ExposedTaskReceive>()
-            databaseService.updateTask(id, task)
-            call.respond(HttpStatusCode.OK, task)
+            call.authorizedAction(message = task) {
+                databaseService.updateTask(id, task)
+            }
         }
 
         delete("/users/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            databaseService.deleteUser(id)
-            call.respond(HttpStatusCode.OK)
+            call.authorizedAction(HttpStatusCode.NoContent) {
+                databaseService.deleteUser(id)
+            }
         }
 
         delete("/tasks/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            databaseService.deleteTask(id)
-            call.respond(HttpStatusCode.OK)
+            call.authorizedAction(HttpStatusCode.NoContent) {
+                databaseService.deleteTask(id)
+            }
         }
 
         get("/testLogin") {
@@ -86,8 +91,7 @@ fun Application.configureDatabases() {
         }
 
         get("/isLoggedIn") {
-            val isLoggedIn = call.sessions.get<UserSession>()?.isLoggedIn ?: false
-            call.respond(if (isLoggedIn) HttpStatusCode.OK else HttpStatusCode.Unauthorized)
+            call.respond(if (call.isLoggedIn()) HttpStatusCode.OK else HttpStatusCode.Unauthorized)
         }
     }
 }
