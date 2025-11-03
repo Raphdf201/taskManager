@@ -18,10 +18,17 @@ fun Application.module() {
     configureHTTP()
 }
 
+/**
+ * If a logged-in session is present, return true
+ */
 fun RoutingCall.isLoggedIn(): Boolean {
     return this.sessions.get<UserSession>()?.isLoggedIn ?: false
 }
 
+/**
+ * If logged in, execute action and respond successCode
+ * Else, respond {@link HttpStatusCode#Unauthorized}
+ */
 suspend fun RoutingCall.authorizedAction(successCode: HttpStatusCode = HttpStatusCode.OK, action: suspend () -> Unit) {
     if (this.isLoggedIn()) {
         action()
@@ -29,6 +36,10 @@ suspend fun RoutingCall.authorizedAction(successCode: HttpStatusCode = HttpStatu
     } else this.respond(HttpStatusCode.Unauthorized)
 }
 
+/**
+ * If logged in, execute action and respond successCode + message
+ * Else, respond {@link HttpStatusCode#Unauthorized}
+ */
 suspend fun RoutingCall.authorizedAction(successCode: HttpStatusCode = HttpStatusCode.OK, message: Any, action: suspend () -> Unit) {
     if (this.isLoggedIn()) {
         action()
@@ -36,6 +47,10 @@ suspend fun RoutingCall.authorizedAction(successCode: HttpStatusCode = HttpStatu
     } else this.respond(HttpStatusCode.Unauthorized)
 }
 
+/**
+ * If logged in, execute action and respond successCode + message
+ * Else, respond {@link HttpStatusCode#Unauthorized}
+ */
 suspend fun RoutingCall.authorizedActionWithMessage(successCode: HttpStatusCode = HttpStatusCode.OK, action: suspend () -> Any) {
     if (this.isLoggedIn()) {
         this.respond(successCode, action())

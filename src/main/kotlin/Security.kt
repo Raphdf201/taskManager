@@ -28,16 +28,16 @@ fun Application.configureSecurity() {
     }
     authentication {
         oauth("auth-oauth-google") {
-            urlProvider = { Constants.Auth.callback }
+            urlProvider = { Constants.Auth.CALLBACK }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
-                    name = Constants.Auth.name,
-                    authorizeUrl = Constants.Auth.authorizeUrl,
-                    accessTokenUrl = Constants.Auth.accessTokenUrl,
+                    name = Constants.Auth.NAME,
+                    authorizeUrl = Constants.Auth.AUTHORIZEURL,
+                    accessTokenUrl = Constants.Auth.ACCESSTOKENURL,
                     requestMethod = HttpMethod.Post,
-                    clientId = Constants.Auth.clientId,
-                    clientSecret = Constants.Auth.clientSecret,
-                    defaultScopes = Constants.Auth.defaultScopes
+                    clientId = Constants.Auth.CLIENTID,
+                    clientSecret = Constants.Auth.CLIENTSECRET,
+                    defaultScopes = Constants.Auth.DEFAULTSCOPES
                 )
             }
             client = HttpClient(Apache)

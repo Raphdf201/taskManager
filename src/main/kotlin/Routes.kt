@@ -7,16 +7,15 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.get
 import io.ktor.server.sessions.sessions
-import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
 
 fun Application.configureDatabases() {
     val database =
         Database.connect(
-            url = Constants.Database.url,
-            user = Constants.Database.user,
-            driver = Constants.Database.driver,
-            password = Constants.Database.password,
+            url = Constants.Database.URL,
+            user = Constants.Database.USER,
+            driver = Constants.Database.DRIVER,
+            password = Constants.Database.PASSWORD,
         )
 
     val databaseService = DatabaseService(database)
