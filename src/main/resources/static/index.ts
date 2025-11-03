@@ -1,6 +1,8 @@
-let lastScroll = 0;
+import {getValue, resetForm, setValue} from "./lib";
+
 const header = document.querySelector('.header');
 const API_URL = 'https://commtasks.raphdf201.net';
+let lastScroll = 0;
 let currentFilter = 'all';
 let allTasks = [];
 let isEditMode = false;
@@ -65,7 +67,7 @@ function openModal() {
     editingTaskId = null;
     document.getElementById('modal-title').textContent = 'Nouvelle tâche';
     document.getElementById('submit-btn').textContent = 'Créer la tâche';
-    document.getElementById('task-form').reset();
+    resetForm(document.getElementById('task-form'));
     document.getElementById('modal').classList.add('active');
 }
 
@@ -73,7 +75,7 @@ function closeModal() {
     document.getElementById('modal').classList.remove('active');
     isEditMode = false;
     editingTaskId = null;
-    document.getElementById('task-form').reset();
+    resetForm(document.getElementById('task-form'));
 }
 
 let creatorData = {};
@@ -308,11 +310,6 @@ function displayFilteredTasks() {
 
     container.innerHTML = filteredTasks.map(task => createTaskCard(task)).join('');
 
-    // Initialize Lucide icons
-    if (window.lucide) {
-        lucide.createIcons();
-    }
-
     // Trigger visibility check after rendering
     setTimeout(() => checkVisibility(), 100);
 }
@@ -345,7 +342,7 @@ async function submitTask(event) {
         event.preventDefault();
     }
 
-    const submitBtn = document.getElementById('submit-btn');
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
     const originalText = submitBtn.textContent;
 
     submitBtn.disabled = true;
@@ -353,12 +350,12 @@ async function submitTask(event) {
 
     try {
         const taskData = {
-            title: document.getElementById('task-title').value,
-            description: document.getElementById('task-description').value,
-            dueDate: document.getElementById('task-date').value,
-            status: document.getElementById('task-status').value || 'todo',
-            priority: document.getElementById('task-priority').value || 'medium',
-            creatorId: parseInt(document.getElementById('task-assignee').value) || 1
+            title: getValue(document.getElementById('task-title')),
+            description: getValue(document.getElementById('task-description')),
+            dueDate: getValue(document.getElementById('task-date')),
+            status: getValue(document.getElementById('task-status')) || 'todo',
+            priority: getValue(document.getElementById('task-priority')) || 'medium',
+            creatorId: parseInt(getValue(document.getElementById('task-assignee'))) || 1
         };
 
         console.log('Sending task data:', taskData);
@@ -384,7 +381,7 @@ async function submitTask(event) {
         console.log(isEditMode ? 'Task updated successfully:' : 'Task created successfully:', result);
 
         closeModal();
-        document.getElementById('task-form').reset();
+        resetForm(document.getElementById('task-form'))
 
         // Refresh the task list
         await fetchTasks();
@@ -425,7 +422,7 @@ async function deleteTask(taskId) {
         console.log('Task deleted successfully:', taskId);
 
         // Add fade out animation before removing
-        const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+        const taskCard = document.querySelector(`[data-task-id="${taskId}"]`) as HTMLElement;
         if (taskCard) {
             taskCard.style.transition = 'all 0.3s ease';
             taskCard.style.opacity = '0';
@@ -469,12 +466,12 @@ async function editTask(taskId) {
     document.getElementById('submit-btn').textContent = 'Mettre à jour';
 
     // Populate form with task data
-    document.getElementById('task-title').value = task.title;
-    document.getElementById('task-description').value = task.description;
-    document.getElementById('task-date').value = task.dueDate;
-    document.getElementById('task-status').value = task.status;
-    document.getElementById('task-priority').value = task.priority;
-    document.getElementById('task-assignee').value = task.creatorId;
+    setValue(document.getElementById('task-title'), task.title);
+    setValue(document.getElementById('task-description'), task.description);
+    setValue(document.getElementById('task-date'), task.dueDate);
+    setValue(document.getElementById('task-status'), task.status);
+    setValue(document.getElementById('task-priority'), task.priority);
+    setValue(document.getElementById('task-assignee'), task.creatorId);
 
     // Open modal
     document.getElementById('modal').classList.add('active');
@@ -487,7 +484,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     lucide.createIcons();
 });
 
-// Initialize Lucide icons
-if (window.lucide) {
-    lucide.createIcons();
-}
+lucide.createIcons();
