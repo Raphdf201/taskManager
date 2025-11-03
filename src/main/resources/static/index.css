@@ -175,6 +175,18 @@ body {
     margin-top: 0;
     margin-bottom: 0;
 }
+/* ADD THIS to your CSS file - Stat card initial state */
+.stat-card {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* This class is added by JavaScript after animation */
+.stat-card.stat-animate-in {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
 
 .stat-card {
     background: white;
