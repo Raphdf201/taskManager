@@ -3,7 +3,7 @@ package net.raphdf201
 class Constants {
     class Database {
         companion object {
-            const val URL = "jdbc:mariadb://localhost:3306/taskmanager"
+            const val URL = "jdbc:mariadb://192.168.1.14:3306/taskmanager"
             const val USER = "taskmgr"
             const val DRIVER = "org.mariadb.jdbc.Driver"
             const val PASSWORD = "TaskManagerPw124!"
