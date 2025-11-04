@@ -24,6 +24,7 @@ dependencies {
     implementation(libs.ktor.server.auth)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.apache)
+    implementation(libs.ktor.client.negotiation)
     implementation(libs.ktor.server.http.redirect)
     implementation(libs.ktor.server.forwarded.header)
     implementation(libs.ktor.server.compression)

@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Serializable
 data class ExposedUserSend(
-    val id: Int,
+    val email: String,
     val name: String,
     val profileIcon: String
 )
@@ -43,11 +43,11 @@ data class ExposedTaskReceive(
 
 class DatabaseService(database: Database) {
     object Users : Table() {
-        val id = integer("id").autoIncrement()
+        val email = varchar("email", 50)
         val name = varchar("name", 50)
         val profileIcon = varchar("profileIcon", 100)
 
-        override val primaryKey = PrimaryKey(id)
+        override val primaryKey = PrimaryKey(email)
     }
 
     object Tasks : Table() {
@@ -68,11 +68,11 @@ class DatabaseService(database: Database) {
         }
     }
 
-    suspend fun createUser(user: ExposedUserReceive): Int = dbQuery {
+    suspend fun createUser(user: ExposedUserReceive): String = dbQuery {
         Users.insert {
             it[name] = user.name
             it[profileIcon] = user.profileIcon
-        }[Users.id]
+        }[Users.email]
     }
 
     suspend fun createTask(task: ExposedTaskReceive): Int = dbQuery {
@@ -86,12 +86,12 @@ class DatabaseService(database: Database) {
         }[Tasks.id]
     }
 
-    suspend fun getUser(id: Int): ExposedUserSend? {
+    suspend fun getUser(email: String): ExposedUserSend? {
         return dbQuery {
             Users.selectAll()
-                .where { Users.id eq id }
+                .where { Users.email eq email }
                 .map { ExposedUserSend(
-                    it[Users.id],
+                    it[Users.email],
                     it[Users.name],
                     it[Users.profileIcon]
                 ) }
@@ -104,7 +104,7 @@ class DatabaseService(database: Database) {
             Tasks.selectAll()
                 .map {
                     ExposedUserSend(
-                        it[Users.id],
+                        it[Users.email],
                         it[Users.name],
                         it[Users.profileIcon],
                     )
@@ -129,9 +129,9 @@ class DatabaseService(database: Database) {
         }
     }
 
-    suspend fun updateUser(id: Int, user: ExposedUserSend) {
+    suspend fun updateUser(email: String, user: ExposedUserSend) {
         dbQuery {
-            Users.update({ Users.id eq id }) {
+            Users.update({ Users.email eq email }) {
                 it[name] = user.name
                 it[profileIcon] = user.profileIcon
             }
@@ -151,15 +151,15 @@ class DatabaseService(database: Database) {
         }
     }
 
-    suspend fun deleteUser(id: Int) {
+    suspend fun deleteUser(email: String) {
         dbQuery {
-            Users.deleteWhere { Users.id.eq(id) }
+            Users.deleteWhere { Users.email eq email }
         }
     }
 
     suspend fun deleteTask(id: Int) {
         dbQuery {
-            Tasks.deleteWhere { Tasks.id.eq(id) }
+            Tasks.deleteWhere { Tasks.id eq id }
         }
     }
 

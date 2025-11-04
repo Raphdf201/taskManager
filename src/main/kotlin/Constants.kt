@@ -1,5 +1,7 @@
 package net.raphdf201
 
+import java.util.concurrent.locks.ReentrantLock
+
 class Constants {
     class Database {
         companion object {
@@ -14,11 +16,18 @@ class Constants {
         companion object {
             const val CALLBACK = "https://commtasks.raphdf201.net/callback"
             const val NAME = "google"
-            const val AUTHORIZEURL = "https://accounts.google.com/o/oauth2/auth"
-            const val ACCESSTOKENURL = "https://accounts.google.com/o/oauth2/token"
-            const val CLIENTID = "963962680553-ju8joh4ct4qeevmu4n132t48slk77vq5.apps.googleusercontent.com"
-            const val CLIENTSECRET = "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"
-            val DEFAULTSCOPES = listOf("https://www.googleapis.com/auth/userinfo.profile")
+            const val AUTHORIZE_URL = "https://accounts.google.com/o/oauth2/auth"
+            const val ACCESS_TOKEN_URL = "https://accounts.google.com/o/oauth2/token"
+            const val CLIENT_ID = "963962680553-ju8joh4ct4qeevmu4n132t48slk77vq5.apps.googleusercontent.com"
+            const val CLIENT_SECRET = "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"
+            val DEFAULT_SCOPES = listOf("https://www.googleapis.com/auth/userinfo.profile")
         }
+    }
+
+    companion object {
+        const val LOG_PATH = "logs"
+        const val SIZE_CHECK_INTERVAL = 100
+        val logLock = ReentrantLock()
+        var lastSizeCheck = 0L
     }
 }

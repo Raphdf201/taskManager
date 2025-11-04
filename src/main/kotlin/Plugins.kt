@@ -13,6 +13,8 @@ import io.ktor.server.plugins.httpsredirect.*
 import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.routing
+import io.ktor.server.sessions.Sessions
+import io.ktor.server.sessions.cookie
 
 fun Application.configureHTTP() {
     install(HttpsRedirect) {
@@ -21,8 +23,8 @@ fun Application.configureHTTP() {
         // 301 Moved Permanently, or 302 Found redirect.
         permanentRedirect = true
     }
-    install(ForwardedHeaders) // WARNING: for security, do not include this if not behind a reverse proxy
-    install(XForwardedHeaders) // WARNING: for security, do not include this if not behind a reverse proxy
+    install(ForwardedHeaders)
+    install(XForwardedHeaders)
     install(Compression)
     install(ContentNegotiation) {
         json()
@@ -40,6 +42,12 @@ fun Application.configureHTTP() {
             call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
         }
     }
+    install(Sessions) {
+        cookie<UserSession>("techTaskManager") {
+            cookie.extensions["SameSite"] = "lax"
+        }
+    }
+
     routing {
         staticResources("/", "static")
     }
