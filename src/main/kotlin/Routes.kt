@@ -20,6 +20,11 @@ fun Application.configureDatabases() {
     )
 
     routing {
+        get("/") {
+            if (call.isLoggedIn()) call.respondRedirect("/tasksPage.html")
+            else call.respondRedirect("/loginPage.html")
+        }
+
         get("/tasks") {
             val tasks = db.getTasks()
             call.respond(tasks)

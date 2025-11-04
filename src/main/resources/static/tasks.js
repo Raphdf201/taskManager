@@ -499,10 +499,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Animate stats after a brief delay
     setTimeout(() => animateStats(), 200);
-
-    lucide.createIcons();
 });
-
-if (window.lucide) {
-    lucide.createIcons();
-}
