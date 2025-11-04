@@ -46,10 +46,7 @@ fun Application.configureSecurity() {
 
     routing {
         authenticate("auth-oauth-google") {
-            get("/login") {
-                // OAuth will handle the redirect automatically
-            }
-
+            get("/login") {}
             get("/callback") {
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.authentication.principal()
                 if (principal != null) {
@@ -57,7 +54,7 @@ fun Application.configureSecurity() {
                         isLoggedIn = true,
                         accessToken = principal.accessToken
                     ))
-                    call.respondRedirect("/testLogin")
+                    call.respondRedirect("/")
                 } else {
                     call.respondRedirect("/login")
                 }

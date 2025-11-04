@@ -10,42 +10,42 @@ import io.ktor.server.sessions.sessions
 import org.jetbrains.exposed.sql.Database
 
 fun Application.configureDatabases() {
-    val database =
+    val db = DatabaseService(
         Database.connect(
             url = Constants.Database.URL,
             user = Constants.Database.USER,
             driver = Constants.Database.DRIVER,
             password = Constants.Database.PASSWORD,
         )
+    )
 
-    val databaseService = DatabaseService(database)
     routing {
         get("/tasks") {
-            val tasks = databaseService.getTasks()
+            val tasks = db.getTasks()
             call.respond(tasks)
         }
 
         post("/tasks") {
             val task = call.receive<ExposedTaskReceive>()
             call.authorizedActionWithMessage(HttpStatusCode.Created) {
-                databaseService.createTask(task)
+                db.createTask(task)
             }
         }
 
         get("/users") {
-            call.respond(databaseService.getUsers())
+            call.respond(db.getUsers())
         }
 
         post("/users") {
             val user = call.receive<ExposedUserReceive>()
             call.authorizedActionWithMessage(HttpStatusCode.Created) {
-                databaseService.createUser(user)
+                db.createUser(user)
             }
         }
 
         get("/users/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            val user = databaseService.getUser(id)
+            val user = db.getUser(id)
             if (user != null) {
                 call.respond(user)
             } else {
@@ -57,7 +57,7 @@ fun Application.configureDatabases() {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val user = call.receive<ExposedUserSend>()
             call.authorizedAction {
-                databaseService.updateUser(id, user)
+                db.updateUser(id, user)
             }
         }
 
@@ -65,21 +65,21 @@ fun Application.configureDatabases() {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val task = call.receive<ExposedTaskReceive>()
             call.authorizedAction(message = task) {
-                databaseService.updateTask(id, task)
+                db.updateTask(id, task)
             }
         }
 
         delete("/users/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             call.authorizedAction(HttpStatusCode.NoContent) {
-                databaseService.deleteUser(id)
+                db.deleteUser(id)
             }
         }
 
         delete("/tasks/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             call.authorizedAction(HttpStatusCode.NoContent) {
-                databaseService.deleteTask(id)
+                db.deleteTask(id)
             }
         }
 
