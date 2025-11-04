@@ -25,11 +25,10 @@ dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.apache)
     implementation(libs.ktor.client.negotiation)
-    implementation(libs.ktor.server.http.redirect)
     implementation(libs.ktor.server.forwarded.header)
     implementation(libs.ktor.server.compression)
-    implementation(libs.ktor.server.caching.headers)
     implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.server.openapi)
     implementation(libs.logback.classic)
     implementation(libs.ktor.server.config.yaml)
 }

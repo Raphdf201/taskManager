@@ -1,41 +1,26 @@
 package net.raphdf201
 
-import io.ktor.http.*
-import io.ktor.http.content.*
+import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.*
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
 import io.ktor.server.http.content.staticResources
-import io.ktor.server.plugins.cachingheaders.*
-import io.ktor.server.plugins.compression.*
+import io.ktor.server.plugins.compression.Compression
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.plugins.forwardedheaders.*
-import io.ktor.server.plugins.httpsredirect.*
+import io.ktor.server.plugins.forwardedheaders.ForwardedHeaders
+import io.ktor.server.plugins.forwardedheaders.XForwardedHeaders
 import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.routing
 import io.ktor.server.sessions.Sessions
 import io.ktor.server.sessions.cookie
 
-fun Application.configureHTTP() {
-    install(HttpsRedirect) {
-        // The port to redirect to. By default, 443, the default HTTPS port.
-        sslPort = 443
-        // 301 Moved Permanently, or 302 Found redirect.
-        permanentRedirect = true
-    }
+fun Application.configurePlugins() {
     install(ForwardedHeaders)
     install(XForwardedHeaders)
     install(Compression)
     install(ContentNegotiation) {
         json()
-    }
-    install(CachingHeaders) {
-        options { _, outgoingContent ->
-            when (outgoingContent.contentType?.withoutParameters()) {
-                ContentType.Text.CSS -> CachingOptions(CacheControl.MaxAge(maxAgeSeconds = 24 * 60 * 60))
-                else -> null
-            }
-        }
     }
     install(StatusPages) {
         exception<Throwable> { call, cause ->
