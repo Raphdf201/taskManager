@@ -8,6 +8,10 @@ async function checkAuthentication() {
             }
         });
 
+        if (response.status === 200) {
+            return true;
+        }
+
         if (response.status === 401) {
             // User is not authenticated, redirect to login
             window.location.href = '/login';
@@ -19,12 +23,9 @@ async function checkAuthentication() {
             return false;
         }
 
-        // User is authenticated
-        return true;
+        return false;
     } catch (error) {
         console.error('Error checking authentication:', error);
-        // Optionally redirect on network errors too
-        // window.location.href = '/login';
         return false;
     }
 }
@@ -34,10 +35,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!isAuthenticated) {
         console.log('User not authenticated');
-        // Additional cleanup if needed before redirect
     } else {
         console.log('User authenticated');
-        // Initialize your app here
     }
 });
 
