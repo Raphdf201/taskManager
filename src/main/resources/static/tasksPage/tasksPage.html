@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des tâches team3990</title>
+    <title>Gestion des tâches 3990 </title>
     <link href="tasksPage.css" rel="stylesheet" type="text/css">
     <link href="https://tech.team3990.com/favicon.ico" rel="shortcut icon" type="image/x-icon">
 </head>
@@ -11,10 +11,10 @@
 <!-- Menu Section -->
 <section id="menu" class="menu-section">
     <div class="menu-content">
-        <h1 class="menu-title">Tech Team</h1>
-        <h2 class="menu-subtitle">3990!</h2>
+        <h1 class="menu-title">Bonjour, Samy</h1>
+        <h2 class="menu-subtitle">3990</h2>
         <p class="menu-description">
-            Équipe de robotique compétitive FRC, innovant en ingénierie et technologie
+            Équipe de robotique compétitive FRC, Numéro 1 au québec
         </p>
         <p class="menu-tags-text">
             Robotique, Programmation, Mécanique, Électronique, Design, Stratégie
@@ -28,24 +28,16 @@
     <div class="container">
         <div class="header" id="header">
             <div class="header-left">
-                <div class="header-logo" onclick="toggleStats()" style="cursor: pointer;">
-                    <i data-lucide="list-checks" style="width: 32px; height: 32px;"></i>
-                </div>
                 <div class="header-nav-buttons">
-                    <a href="#menu" class="header-nav-btn active" data-section="menu" onclick="setActiveButton(this)">
-                        <i data-lucide="menu"></i>
+                    <a href="#menu" class="header-nav-btn   " data-section="menu" onclick="setActiveButton(this)">
                         Menu
                     </a>
                     <a href="#tasks" class="header-nav-btn" data-section="tasks" onclick="setActiveButton(this)">
-                        <i data-lucide="layout-dashboard"></i>
                         Dashboard
                     </a>
                 </div>
             </div>
-            <h1>Gestion des Tâches 3990</h1>
-            <div class="header-logo-right">
-                <img alt="Logo" src="https://tech.team3990.com/assets/images/T4K.png" style="width: 82px; height: 82px;">
-            </div>
+            <h1></h1>
         </div>
 
         <div class="stats-grid">
@@ -165,9 +157,9 @@
     // Initialize Lucide icons
     lucide.createIcons();
 
-    // Handle active navbar button based on scroll position
+    // Handle active navbar button
     function setActiveButton(button) {
-        document.querySelectorAll('.navbar-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.header-nav-btn').forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
     }
 
@@ -184,9 +176,9 @@
             header.classList.remove('scrolled');
         }
 
-        // Update active button
+        // Update active button based on scroll position
         const sections = document.querySelectorAll('section');
-        const navButtons = document.querySelectorAll('.navbar-btn');
+        const navButtons = document.querySelectorAll('.header-nav-btn');
 
         let current = '';
         sections.forEach(section => {

@@ -54,9 +54,6 @@ function animateTasksOnLoad() {
     hasAnimated = true;
 }
 
-// REMOVED: checkVisibility function - no longer needed
-
-// Simplified scroll handler - only handles header hide/show
 window.addEventListener('scroll', () => {
     const currentScroll = window.pageYOffset;
 
