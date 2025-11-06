@@ -66,6 +66,7 @@ suspend fun RoutingCall.authorizedActionWithMessage(successCode: HttpStatusCode 
  */
 @OptIn(ExperimentalTime::class)
 fun log(string: String) {
+    println(string)
     Constants.logLock.withLock {
         try {
             val logFile = File("${Constants.LOG_PATH}/taskmgr.log")

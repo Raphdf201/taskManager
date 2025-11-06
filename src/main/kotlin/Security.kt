@@ -74,12 +74,12 @@ fun Application.configureSecurity() {
                         }.body()
 
                         call.sessions.set(UserSession(
-                            isLoggedIn = true,
-                            accessToken = principal.accessToken,
-                            userId = userInfo.id,
-                            email = userInfo.email,
-                            name = userInfo.name,
-                            pictureUrl = userInfo.picture
+                            true,
+                            principal.accessToken,
+                            userInfo.id,
+                            userInfo.email,
+                            userInfo.name,
+                            userInfo.picture
                         ))
                         call.respondRedirect(Constants.AFTERLOGIN_REDIRECT)
                     } catch (e: Exception) {
