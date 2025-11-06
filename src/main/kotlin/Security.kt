@@ -65,13 +65,11 @@ fun Application.configureSecurity() {
                 if (principal != null) {
                     try {
                         // Fetch user info from Google
-                        val userInfoReq = httpClient.get("https://www.googleapis.com/oauth2/v2/userinfo") {
+                        val userInfo = httpClient.get("https://www.googleapis.com/oauth2/v2/userinfo") {
                             headers {
                                 append("Authorization", "Bearer ${principal.accessToken}")
                             }
-                        }
-                        println(userInfoReq.bodyAsText())
-                        val userInfo = userInfoReq.body<GoogleUserInfo>()
+                        }.body<GoogleUserInfo>()
 
                         call.sessions.set(UserSession(
                             true,

@@ -50,7 +50,7 @@ class DatabaseService(database: Database) {
         val description = varchar("description", 500)
         val priority = varchar("priority", 10)
         val status = varchar("status", 20)
-        val creatorId = integer("creatorId")
+        val creatorId = integer("creatorId").references(Users.id)
         val dueDate = varchar("dueDate", 10)
 
         override val primaryKey = PrimaryKey(id)
