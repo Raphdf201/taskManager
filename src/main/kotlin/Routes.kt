@@ -21,7 +21,7 @@ fun Application.configureDatabases() {
 
     routing {
         get("/") {
-            if (call.isLoggedIn()) call.respondRedirect("/tasksPage/tasksPage.html")
+            if (call.isLoggedIn()) call.respondRedirect(Constants.AFTERLOGIN_REDIRECT)
             else call.respondRedirect("/loginPage/loginPage.html")
         }
 

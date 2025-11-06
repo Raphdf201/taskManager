@@ -25,6 +25,7 @@ class Constants {
     }
 
     companion object {
+        const val AFTERLOGIN_REDIRECT = "/tasksPage/tasksPage.html"
         const val LOG_PATH = "logs"
         const val SIZE_CHECK_INTERVAL = 100
         val logLock = ReentrantLock()

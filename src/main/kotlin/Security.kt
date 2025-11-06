@@ -81,13 +81,13 @@ fun Application.configureSecurity() {
                             name = userInfo.name,
                             pictureUrl = userInfo.picture
                         ))
-                        call.respondRedirect("/")
+                        call.respondRedirect(Constants.AFTERLOGIN_REDIRECT)
                     } catch (e: Exception) {
                         call.respondRedirect("/login")
                         log("Error at ${Clock.System.now()} : ${e.message}")
                     }
                 } else {
-                    call.respondRedirect("/login")
+                    call.respondRedirect("/loginPage/loginPage.html")
                 }
             }
         }
