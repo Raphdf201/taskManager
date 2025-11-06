@@ -21,13 +21,14 @@ fun Application.configureDatabases() {
 
     routing {
         get("/") {
-            if (call.isLoggedIn()) call.respondRedirect("/tasksPage.html")
-            else call.respondRedirect("/loginPage.html")
+            if (call.isLoggedIn()) call.respondRedirect("/tasksPage/tasksPage.html")
+            else call.respondRedirect("/loginPage/loginPage.html")
         }
 
         get("/tasks") {
-            val tasks = db.getTasks()
-            call.respond(tasks)
+            call.authorizedActionWithMessage {
+                db.getTasks()
+            }
         }
 
         post("/tasks") {
@@ -38,7 +39,9 @@ fun Application.configureDatabases() {
         }
 
         get("/users") {
-            call.respond(db.getUsers())
+            call.authorizedActionWithMessage {
+                db.getUsers()
+            }
         }
 
         post("/users") {
