@@ -14,7 +14,6 @@ import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.authentication
 import io.ktor.server.auth.oauth
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
@@ -80,7 +79,9 @@ fun Application.configureSecurity() {
                         ))
 
                         val u = db.getUser(userInfo.id)
-                        if (u == null) db.createUser(ExposedUser(userInfo.id, userInfo.name, userInfo.picture))
+                        val createdUser = ExposedUser(userInfo.id, userInfo.name, userInfo.picture)
+                        println(createdUser)
+                        if (u == null) db.createUser(createdUser)
                         call.respondRedirect(Constants.AFTERLOGIN_REDIRECT)
                     } catch (e: Exception) {
                         call.respondRedirect("/login")
