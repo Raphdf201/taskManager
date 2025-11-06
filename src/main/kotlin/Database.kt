@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @Serializable
 data class ExposedUser(
-    val id: Int,
+    val id: String,
     val name: String,
     val profileIcon: String
 )
@@ -21,7 +21,7 @@ data class ExposedTaskSend(
     val description: String,
     val priority: String,
     val status: String,
-    val creatorId: Int,
+    val creatorId: String,
     val dueDate: String
 )
 
@@ -31,13 +31,13 @@ data class ExposedTaskReceive(
     val description: String,
     val priority: String,
     val status: String,
-    val creatorId: Int,
+    val creatorId: String,
     val dueDate: String
 )
 
 class DatabaseService(database: Database) {
     object Users : Table() {
-        val id = integer("id")
+        val id = varchar("id", 50)
         val name = varchar("name", 50)
         val profileIcon = varchar("profileIcon", 100)
 
@@ -50,7 +50,7 @@ class DatabaseService(database: Database) {
         val description = varchar("description", 500)
         val priority = varchar("priority", 10)
         val status = varchar("status", 20)
-        val creatorId = integer("creatorId").references(Users.id)
+        val creatorId = varchar("creatorId", 50).references(Users.id)
         val dueDate = varchar("dueDate", 10)
 
         override val primaryKey = PrimaryKey(id)
@@ -62,7 +62,7 @@ class DatabaseService(database: Database) {
         }
     }
 
-    suspend fun createUser(user: ExposedUser): Int = dbQuery {
+    suspend fun createUser(user: ExposedUser): String = dbQuery {
         Users.insert {
             it[name] = user.name
             it[profileIcon] = user.profileIcon
@@ -80,7 +80,7 @@ class DatabaseService(database: Database) {
         }[Tasks.id]
     }
 
-    suspend fun getUser(id: Int?): ExposedUser? {
+    suspend fun getUser(id: String?): ExposedUser? {
         if (id == null) return null
         return dbQuery {
             Users.selectAll()
@@ -124,7 +124,7 @@ class DatabaseService(database: Database) {
         }
     }
 
-    suspend fun updateUser(id: Int?, user: ExposedUser) {
+    suspend fun updateUser(id: String?, user: ExposedUser) {
         if (id != null) dbQuery {
             Users.update({ Users.id eq id }) {
                 it[name] = user.name
@@ -146,7 +146,7 @@ class DatabaseService(database: Database) {
         }
     }
 
-    suspend fun deleteUser(id: Int?) {
+    suspend fun deleteUser(id: String?) {
         if (id != null) dbQuery {
             Users.deleteWhere { Users.id eq id }
         }

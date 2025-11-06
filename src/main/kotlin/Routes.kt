@@ -45,7 +45,7 @@ fun Application.configureDatabases() {
         }
 
         get("/users/{id}") {
-            val id = call.parameters["id"]?.toInt()
+            val id = call.parameters["id"]
             val user = db.getUser(id)
             if (user != null) {
                 call.respond(user)
@@ -55,7 +55,7 @@ fun Application.configureDatabases() {
         }
 
         put("/users/{id}") {
-            val id = call.parameters["id"]?.toInt()
+            val id = call.parameters["id"]
             val user = call.receive<ExposedUser>()
             call.authorizedAction {
                 db.updateUser(id, user)
@@ -71,7 +71,7 @@ fun Application.configureDatabases() {
         }
 
         delete("/users/{id}") {
-            val id = call.parameters["id"]?.toInt()
+            val id = call.parameters["id"]
             call.authorizedAction(HttpStatusCode.NoContent) {
                 db.deleteUser(id)
             }

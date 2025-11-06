@@ -74,14 +74,14 @@ fun Application.configureSecurity() {
                         call.sessions.set(UserSession(
                             true,
                             principal.accessToken,
-                            userInfo.id.toInt(),
+                            userInfo.id,
                             userInfo.name,
                             userInfo.picture
                         ))
                         call.respondRedirect(Constants.AFTERLOGIN_REDIRECT)
                     } catch (e: Exception) {
                         call.respondRedirect("/login")
-                        log("Error at ${Clock.System.now()} : ${e.message}", "/callback")
+                        log("Error at ${Clock.System.now()} : ${e.message} ${e.stackTrace}")
                     }
                 } else {
                     call.respondRedirect("/loginPage/loginPage.html")
@@ -118,7 +118,7 @@ fun Application.configureSecurity() {
 data class UserSession(
     val isLoggedIn: Boolean = false,
     val accessToken: String? = null,
-    val userId: Int? = null,
+    val userId: String? = null,
     val name: String? = null,
     val pictureUrl: String? = null
 )
