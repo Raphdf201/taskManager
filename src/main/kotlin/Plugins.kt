@@ -36,6 +36,6 @@ fun Application.configurePlugins() {
 
     routing {
         staticResources("/", "static")
-        openAPI("openapi", "documentation.yaml")
+//        openAPI("openapi", "documentation.yaml")
     }
 }
