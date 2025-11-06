@@ -8,7 +8,6 @@ import io.ktor.client.request.headers
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
-import io.ktor.server.application.install
 import io.ktor.server.auth.OAuthAccessTokenResponse
 import io.ktor.server.auth.OAuthServerSettings
 import io.ktor.server.auth.authenticate
@@ -21,9 +20,7 @@ import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
-import io.ktor.server.sessions.Sessions
 import io.ktor.server.sessions.clear
-import io.ktor.server.sessions.cookie
 import io.ktor.server.sessions.get
 import io.ktor.server.sessions.sessions
 import io.ktor.server.sessions.set
@@ -79,8 +76,7 @@ fun Application.configureSecurity() {
                         call.sessions.set(UserSession(
                             true,
                             principal.accessToken,
-                            userInfo.id,
-                            userInfo.email,
+                            userInfo.id.toInt(),
                             userInfo.name,
                             userInfo.picture
                         ))
@@ -104,11 +100,11 @@ fun Application.configureSecurity() {
             val session = call.sessions.get<UserSession>()
             if (session?.isLoggedIn == true) {
                 if (
-                    session.email != null
+                    session.userId != null
                     && session.name != null
                     && session.pictureUrl != null
-                    ) call.respond(ExposedUserSend(
-                    session.email,
+                    ) call.respond(ExposedUser(
+                    session.userId,
                     session.name,
                     session.pictureUrl
                 ))
@@ -124,8 +120,7 @@ fun Application.configureSecurity() {
 data class UserSession(
     val isLoggedIn: Boolean = false,
     val accessToken: String? = null,
-    val userId: String? = null,
-    val email: String? = null,
+    val userId: Int? = null,
     val name: String? = null,
     val pictureUrl: String? = null
 )
@@ -133,11 +128,8 @@ data class UserSession(
 @Serializable
 data class GoogleUserInfo(
     val id: String,
-    val email: String,
-    val verified_email: Boolean? = null,
     val name: String? = null,
     val given_name: String? = null,
     val family_name: String? = null,
     val picture: String? = null,
-    val locale: String? = null
 )

@@ -44,16 +44,9 @@ fun Application.configureDatabases() {
             }
         }
 
-        post("/users") {
-            val user = call.receive<ExposedUserReceive>()
-            call.authorizedActionWithMessage(HttpStatusCode.Created) {
-                db.createUser(user)
-            }
-        }
-
         get("/users/{id}") {
-            val email = call.parameters["id"] ?: throw IllegalArgumentException("Invalid email")
-            val user = db.getUser(email)
+            val id = call.parameters["id"]?.toInt()
+            val user = db.getUser(id)
             if (user != null) {
                 call.respond(user)
             } else {
@@ -62,10 +55,10 @@ fun Application.configureDatabases() {
         }
 
         put("/users/{id}") {
-            val email = call.parameters["id"] ?: throw IllegalArgumentException("Invalid email")
-            val user = call.receive<ExposedUserSend>()
+            val id = call.parameters["id"]?.toInt()
+            val user = call.receive<ExposedUser>()
             call.authorizedAction {
-                db.updateUser(email, user)
+                db.updateUser(id, user)
             }
         }
 
@@ -78,9 +71,9 @@ fun Application.configureDatabases() {
         }
 
         delete("/users/{id}") {
-            val email = call.parameters["id"] ?: throw IllegalArgumentException("Invalid email")
+            val id = call.parameters["id"]?.toInt()
             call.authorizedAction(HttpStatusCode.NoContent) {
-                db.deleteUser(email)
+                db.deleteUser(id)
             }
         }
 
