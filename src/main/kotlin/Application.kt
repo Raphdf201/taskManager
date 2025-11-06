@@ -65,8 +65,8 @@ suspend fun RoutingCall.authorizedActionWithMessage(successCode: HttpStatusCode 
  * Append the provided string to the log with automatic rotation at 50MB
  */
 @OptIn(ExperimentalTime::class)
-fun log(string: String) {
-    println(string)
+fun log(string: String, additionalInfo: String = "") {
+    println(additionalInfo + string)
     Constants.logLock.withLock {
         try {
             val logFile = File("${Constants.LOG_PATH}/taskmgr.log")

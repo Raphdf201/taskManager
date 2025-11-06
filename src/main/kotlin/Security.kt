@@ -81,7 +81,7 @@ fun Application.configureSecurity() {
                         call.respondRedirect(Constants.AFTERLOGIN_REDIRECT)
                     } catch (e: Exception) {
                         call.respondRedirect("/login")
-                        log("Error at ${Clock.System.now()} : ${e.message}")
+                        log("Error at ${Clock.System.now()} : ${e.message}", "/callback")
                     }
                 } else {
                     call.respondRedirect("/loginPage/loginPage.html")
