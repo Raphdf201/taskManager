@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 data class ExposedUser(
     val id: String,
     val name: String,
-    val profileIcon: String
+    val profileIcon: String?
 )
 
 @Serializable
@@ -39,7 +39,7 @@ class DatabaseService(database: Database) {
     object Users : Table() {
         val id = varchar("id", 50)
         val name = varchar("name", 50)
-        val profileIcon = varchar("profileIcon", 100)
+        val profileIcon = varchar("profileIcon", 100).nullable()
 
         override val primaryKey = PrimaryKey(id)
     }

@@ -9,8 +9,10 @@ import io.ktor.server.sessions.get
 import io.ktor.server.sessions.sessions
 import org.jetbrains.exposed.sql.Database
 
+lateinit var db: DatabaseService
+
 fun Application.configureDatabases() {
-    val db = DatabaseService(
+    db = DatabaseService(
         Database.connect(
             url = Constants.Database.URL,
             user = Constants.Database.USER,

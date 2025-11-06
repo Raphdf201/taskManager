@@ -78,6 +78,9 @@ fun Application.configureSecurity() {
                             userInfo.name,
                             userInfo.picture
                         ))
+
+                        val u = db.getUser(userInfo.id)
+                        if (u == null) db.createUser(ExposedUser(userInfo.id, userInfo.name, userInfo.picture))
                         call.respondRedirect(Constants.AFTERLOGIN_REDIRECT)
                     } catch (e: Exception) {
                         call.respondRedirect("/login")
@@ -126,7 +129,7 @@ data class UserSession(
 @Serializable
 data class GoogleUserInfo(
     val id: String,
-    val name: String? = null,
+    val name: String,
     val given_name: String? = null,
     val family_name: String? = null,
     val picture: String? = null,
