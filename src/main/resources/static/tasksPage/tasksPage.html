@@ -2,45 +2,45 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des tâches team3990</title>
-    <link href="./tasks.css" rel="stylesheet" type="text/css">
+    <link href="tasksPage.css" rel="stylesheet" type="text/css">
     <link href="https://tech.team3990.com/favicon.ico" rel="shortcut icon" type="image/x-icon">
 </head>
 <body>
-<script>
-    // Protect this page - redirect to login if not authenticated
-    if (!sessionStorage.getItem('isLoggedIn')) {
-        window.location.replace('loginPage.html');
-    }
-</script>
+<!-- Menu Section -->
+<section id="menu" class="menu-section">
+    <div class="menu-content">
+        <h1 class="menu-title">Tech Team</h1>
+        <h2 class="menu-subtitle">3990!</h2>
+        <p class="menu-description">
+            Équipe de robotique compétitive FRC, innovant en ingénierie et technologie
+        </p>
+        <p class="menu-tags-text">
+            Robotique, Programmation, Mécanique, Électronique, Design, Stratégie
+        </p>
+        <p class="menu-cta">🚀 Dashboard</p>
+    </div>
+</section>
 
-<!-- Navigation Bar -->
-<nav class="navbar">
-    <button class="nav-btn" onclick="window.location.href='menu.html'">
-        <i data-lucide="menu" style="width: 20px; height: 20px;"></i>
-        Menu
-    </button>
-    <button class="nav-btn active">
-        <i data-lucide="list-checks" style="width: 20px; height: 20px;"></i>
-        Tâches
-    </button>
-</nav>
-
+<!-- Tasks Section -->
+<section id="tasks" class="tasks-section">
     <div class="container">
-        <div class="header">
-            <div class="header-logo" onclick="toggleStats()" style="cursor: pointer;">
-                <i data-lucide="list-checks" style="width: 32px; height: 32px;"></i>
-            </div>
-            <div class="header-nav-buttons">
-                <button class="header-nav-btn" onclick="window.location.href='menu.html'">
-                    <i data-lucide="menu" style="width: 18px; height: 18px;"></i>
-                    Menu
-                </button>
-                <button class="header-nav-btn active">
-                    <i data-lucide="layout-dashboard" style="width: 18px; height: 18px;"></i>
-                    Dashboard
-                </button>
+        <div class="header" id="header">
+            <div class="header-left">
+                <div class="header-logo" onclick="toggleStats()" style="cursor: pointer;">
+                    <i data-lucide="list-checks" style="width: 32px; height: 32px;"></i>
+                </div>
+                <div class="header-nav-buttons">
+                    <a href="#menu" class="header-nav-btn active" data-section="menu" onclick="setActiveButton(this)">
+                        <i data-lucide="menu"></i>
+                        Menu
+                    </a>
+                    <a href="#tasks" class="header-nav-btn" data-section="tasks" onclick="setActiveButton(this)">
+                        <i data-lucide="layout-dashboard"></i>
+                        Dashboard
+                    </a>
+                </div>
             </div>
             <h1>Gestion des Tâches 3990</h1>
             <div class="header-logo-right">
@@ -86,14 +86,17 @@
                 </div>
             </div>
         </div>
+
         <!-- Floating Add Button -->
         <button class="floating-add-btn" onclick="openModal()"></button>
 
         <div class="tasks-list" id="tasks-container">
             <div style="text-align: center; padding: 2rem;">Loading tasks...</div>
         </div>
-</div>
+    </div>
+</section>
 
+<!-- Modal -->
 <div class="modal-overlay" id="modal">
     <div class="modal">
         <div class="modal-header">
@@ -156,7 +159,53 @@
 </div>
 
 <script src="https://unpkg.com/lucide@latest"></script>
-<script src="./common.js"></script>
-<script src="./tasks.js"></script>
+<script src="../common.js"></script>
+<script src="tasksPage.js"></script>
+<script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Handle active navbar button based on scroll position
+    function setActiveButton(button) {
+        document.querySelectorAll('.navbar-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+    }
+
+    // Header shrink on scroll
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+        const header = document.getElementById('header');
+        const currentScroll = window.scrollY;
+
+        // Add shrink class when scrolled down
+        if (currentScroll > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+
+        // Update active button
+        const sections = document.querySelectorAll('section');
+        const navButtons = document.querySelectorAll('.navbar-btn');
+
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (currentScroll >= (sectionTop - 100)) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-section') === current) {
+                btn.classList.add('active');
+            }
+        });
+
+        lastScroll = currentScroll;
+    });
+</script>
 </body>
 </html>

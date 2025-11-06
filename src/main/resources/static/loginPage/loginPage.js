@@ -4,7 +4,7 @@ const API_URL = 'https://commtasks.raphdf201.net';
 document.addEventListener('DOMContentLoaded', () => {
     // Check if already logged in
     if (sessionStorage.getItem('isLoggedIn')) {
-             window.location.href = 'tasks.html';
+             window.location.href = '../menu/menu.html';
         return;
     }
 
