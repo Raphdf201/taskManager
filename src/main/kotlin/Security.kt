@@ -15,6 +15,7 @@ import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.authentication
 import io.ktor.server.auth.oauth
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
@@ -67,11 +68,13 @@ fun Application.configureSecurity() {
                 if (principal != null) {
                     try {
                         // Fetch user info from Google
-                        val userInfo: GoogleUserInfo = httpClient.get("https://www.googleapis.com/oauth2/v2/userinfo") {
+                        val userInfoReq = httpClient.get("https://www.googleapis.com/oauth2/v2/userinfo") {
                             headers {
                                 append("Authorization", "Bearer ${principal.accessToken}")
                             }
-                        }.body()
+                        }
+                        println(userInfoReq.bodyAsText())
+                        val userInfo = userInfoReq.body<GoogleUserInfo>()
 
                         call.sessions.set(UserSession(
                             true,

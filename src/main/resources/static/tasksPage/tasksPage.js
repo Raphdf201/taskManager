@@ -513,7 +513,7 @@ async function checkAuthentication() {
 
         if (response.status === 401) {
             // User is not authenticated, redirect to login
-            window.location.href = '/login';
+            window.location.href = '/loginPage/loginPage.html';
             return false;
         }
 
