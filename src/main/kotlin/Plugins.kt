@@ -1,20 +1,16 @@
 package net.raphdf201
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.Application
-import io.ktor.server.application.install
-import io.ktor.server.http.content.staticResources
-import io.ktor.server.plugins.compression.Compression
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.plugins.forwardedheaders.ForwardedHeaders
-import io.ktor.server.plugins.forwardedheaders.XForwardedHeaders
-import io.ktor.server.plugins.openapi.openAPI
-import io.ktor.server.plugins.statuspages.StatusPages
-import io.ktor.server.response.respondText
-import io.ktor.server.routing.routing
-import io.ktor.server.sessions.Sessions
-import io.ktor.server.sessions.cookie
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.application.*
+import io.ktor.server.http.content.*
+import io.ktor.server.plugins.compression.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.forwardedheaders.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 
 fun Application.configurePlugins() {
     install(ForwardedHeaders)
@@ -25,7 +21,9 @@ fun Application.configurePlugins() {
     }
     install(StatusPages) {
         exception<Throwable> { call, cause ->
-            call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
+            val msg = "500: $cause"
+            log(msg)
+            call.respondText(msg, status = HttpStatusCode.InternalServerError)
         }
     }
     install(Sessions) {

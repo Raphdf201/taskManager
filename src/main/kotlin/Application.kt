@@ -1,12 +1,11 @@
 package net.raphdf201
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
-import io.ktor.server.netty.EngineMain
-import io.ktor.server.response.respond
-import io.ktor.server.routing.RoutingCall
-import io.ktor.server.sessions.get
-import io.ktor.server.sessions.sessions
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.netty.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import java.io.File
 import kotlin.concurrent.withLock
 import kotlin.time.Clock
@@ -44,7 +43,11 @@ suspend fun RoutingCall.authorizedAction(successCode: HttpStatusCode = HttpStatu
  * If logged in, execute action and respond successCode + message
  * Else, respond {@link HttpStatusCode#Unauthorized}
  */
-suspend fun RoutingCall.authorizedAction(successCode: HttpStatusCode = HttpStatusCode.OK, message: Any, action: suspend () -> Unit) {
+suspend fun RoutingCall.authorizedAction(
+    successCode: HttpStatusCode = HttpStatusCode.OK,
+    message: Any,
+    action: suspend () -> Unit
+) {
     if (this.isLoggedIn()) {
         action()
         this.respond(successCode, message)
@@ -55,7 +58,10 @@ suspend fun RoutingCall.authorizedAction(successCode: HttpStatusCode = HttpStatu
  * If logged in, execute action and respond successCode + message
  * Else, respond {@link HttpStatusCode#Unauthorized}
  */
-suspend fun RoutingCall.authorizedActionWithMessage(successCode: HttpStatusCode = HttpStatusCode.OK, action: suspend () -> Any) {
+suspend fun RoutingCall.authorizedActionWithMessage(
+    successCode: HttpStatusCode = HttpStatusCode.OK,
+    action: suspend () -> Any
+) {
     if (this.isLoggedIn()) {
         this.respond(successCode, action())
     } else this.respond(HttpStatusCode.Unauthorized)
@@ -67,9 +73,9 @@ suspend fun RoutingCall.authorizedActionWithMessage(successCode: HttpStatusCode 
 @OptIn(ExperimentalTime::class)
 fun log(string: String) {
     println(string)
-    Constants.logLock.withLock {
+    Constants.Logs.lock.withLock {
         try {
-            val logFile = File("${Constants.LOG_PATH}/taskmgr.log")
+            val logFile = File("${Constants.Logs.LOG}/taskmgr.log")
 
             // Ensure parent directory exists
             logFile.parentFile?.mkdirs()
@@ -80,10 +86,10 @@ fun log(string: String) {
             logFile.appendText("[$timestamp] $message")
 
             // Check size periodically instead of every call
-            Constants.lastSizeCheck++
-            if (Constants.lastSizeCheck >= Constants.SIZE_CHECK_INTERVAL && logFile.length() > 50 * 1024 * 1024) {
+            Constants.Logs.lastSizeCheck++
+            if (Constants.Logs.lastSizeCheck >= Constants.Logs.SIZE_CHECK_INTERVAL && logFile.length() > 50 * 1024 * 1024) {
                 rotateLog(logFile)
-                Constants.lastSizeCheck = 0
+                Constants.Logs.lastSizeCheck = 0
             }
         } catch (e: Exception) {
             // Fallback to stderr if logging fails
@@ -97,7 +103,7 @@ fun log(string: String) {
 private fun rotateLog(logFile: File) {
     try {
         val timestamp = Clock.System.now().toString().replace(":", "-")
-        val rotatedFile = File("${Constants.LOG_PATH}/taskmgr-$timestamp.log")
+        val rotatedFile = File("${Constants.Logs.LOG}/taskmgr-$timestamp.log")
 
         // Move instead of copy+delete (atomic operation)
         logFile.renameTo(rotatedFile)

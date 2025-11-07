@@ -5,8 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.sessions.get
-import io.ktor.server.sessions.sessions
+import io.ktor.server.sessions.*
 import org.jetbrains.exposed.sql.Database
 
 lateinit var db: DatabaseService
@@ -14,17 +13,17 @@ lateinit var db: DatabaseService
 fun Application.configureDatabases() {
     db = DatabaseService(
         Database.connect(
-            url = Constants.Database.URL,
-            user = Constants.Database.USER,
-            driver = Constants.Database.DRIVER,
-            password = Constants.Database.PASSWORD,
+            Constants.Database.URL,
+            Constants.Database.USER,
+            Constants.Database.DRIVER,
+            Constants.Database.PASSWORD,
         )
     )
 
     routing {
         get("/") {
-            if (call.isLoggedIn()) call.respondRedirect(Constants.AFTERLOGIN_REDIRECT)
-            else call.respondRedirect("/loginPage/loginPage.html")
+            if (call.isLoggedIn()) call.respondRedirect(Constants.Static.TASKS)
+            else call.respondRedirect(Constants.Static.LOGIN)
         }
 
         get("/tasks") {
@@ -88,8 +87,10 @@ fun Application.configureDatabases() {
 
         get("/testLogin") {
             val session = call.sessions.get<UserSession>()
-            call.respondText("tk : ${session?.accessToken}<br>lgin : ${session?.isLoggedIn}",
-                ContentType.Text.Html)
+            call.respondText(
+                "tk : ${session?.accessToken}<br>lgin : ${session?.isLoggedIn}",
+                ContentType.Text.Html
+            )
         }
 
         get("/isLoggedIn") {

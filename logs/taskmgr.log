@@ -1,2 +1,0 @@
-[2025-11-06T18:00:05.278684368Z] Error at 2025-11-06T18:00:05.276888172Z : Illegal input: Field 'email' is required for type with serial name 'net.raphdf201.GoogleUserInfo', but it was missing at path: $
-[2025-11-06T18:00:09.206614563Z] Error at 2025-11-06T18:00:09.206553542Z : Illegal input: Field 'email' is required for type with serial name 'net.raphdf201.GoogleUserInfo', but it was missing at path: $

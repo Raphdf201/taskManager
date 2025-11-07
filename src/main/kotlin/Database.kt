@@ -57,10 +57,10 @@ class DatabaseService(database: Database) {
     }
 
     init {
-				transaction(database) {
-				    SchemaUtils.drop(Users, Tasks)
-				    SchemaUtils.create(Users, Tasks)
-				}
+        transaction(database) {
+            SchemaUtils.drop(Users, Tasks)
+            SchemaUtils.create(Users, Tasks)
+        }
     }
 
     suspend fun createUser(user: ExposedUser): String = dbQuery {
@@ -86,11 +86,13 @@ class DatabaseService(database: Database) {
         return dbQuery {
             Users.selectAll()
                 .where { Users.id eq id }
-                .map { ExposedUser(
-                    it[Users.id],
-                    it[Users.name],
-                    it[Users.profileIcon]
-                ) }
+                .map {
+                    ExposedUser(
+                        it[Users.id],
+                        it[Users.name],
+                        it[Users.profileIcon]
+                    )
+                }
                 .singleOrNull()
         }
     }

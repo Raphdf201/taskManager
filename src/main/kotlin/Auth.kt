@@ -1,28 +1,17 @@
 package net.raphdf201
 
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.request.get
-import io.ktor.client.request.headers
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
-import io.ktor.server.auth.OAuthAccessTokenResponse
-import io.ktor.server.auth.OAuthServerSettings
-import io.ktor.server.auth.authenticate
-import io.ktor.server.auth.authentication
-import io.ktor.server.auth.oauth
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.response.respond
-import io.ktor.server.response.respondRedirect
-import io.ktor.server.routing.get
-import io.ktor.server.routing.routing
-import io.ktor.server.sessions.clear
-import io.ktor.server.sessions.get
-import io.ktor.server.sessions.sessions
-import io.ktor.server.sessions.set
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.engine.apache.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.request.*
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlin.time.Clock
@@ -43,13 +32,13 @@ fun Application.configureSecurity() {
             urlProvider = { Constants.Auth.CALLBACK }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
-                    name = Constants.Auth.NAME,
-                    authorizeUrl = Constants.Auth.AUTHORIZE_URL,
-                    accessTokenUrl = Constants.Auth.ACCESS_TOKEN_URL,
-                    requestMethod = HttpMethod.Post,
-                    clientId = Constants.Auth.CLIENT_ID,
-                    clientSecret = Constants.Auth.CLIENT_SECRET,
-                    defaultScopes = Constants.Auth.DEFAULT_SCOPES
+                    Constants.Auth.NAME,
+                    Constants.Auth.AUTHORIZE_URL,
+                    Constants.Auth.ACCESS_TOKEN_URL,
+                    HttpMethod.Post,
+                    Constants.Auth.CLIENT_ID,
+                    Constants.Auth.CLIENT_SECRET,
+                    Constants.Auth.DEFAULT_SCOPES
                 )
             }
             client = httpClient
@@ -70,19 +59,21 @@ fun Application.configureSecurity() {
                             }
                         }.body<GoogleUserInfo>()
 
-                        call.sessions.set(UserSession(
-                            true,
-                            principal.accessToken,
-                            userInfo.id,
-                            userInfo.name,
-                            userInfo.picture
-                        ))
+                        call.sessions.set(
+                            UserSession(
+                                true,
+                                principal.accessToken,
+                                userInfo.id,
+                                userInfo.name,
+                                userInfo.picture
+                            )
+                        )
 
                         val u = db.getUser(userInfo.id)
                         val createdUser = ExposedUser(userInfo.id, userInfo.name, userInfo.picture)
                         println(createdUser)
                         if (u == null) db.createUser(createdUser)
-                        call.respondRedirect(Constants.AFTERLOGIN_REDIRECT)
+                        call.respondRedirect(Constants.Static.TASKS)
                     } catch (e: Exception) {
                         call.respondRedirect("/login")
                         log("Error at ${Clock.System.now()} : ${e.message} ${e.stackTrace}")
@@ -105,11 +96,13 @@ fun Application.configureSecurity() {
                     session.userId != null
                     && session.name != null
                     && session.pictureUrl != null
-                    ) call.respond(ExposedUser(
-                    session.userId,
-                    session.name,
-                    session.pictureUrl
-                ))
+                ) call.respond(
+                    ExposedUser(
+                        session.userId,
+                        session.name,
+                        session.pictureUrl
+                    )
+                )
                 else call.respond(HttpStatusCode.BadRequest)
             } else {
                 call.respond(HttpStatusCode.Unauthorized)

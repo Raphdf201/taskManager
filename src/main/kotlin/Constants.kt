@@ -24,11 +24,19 @@ class Constants {
         }
     }
 
-    companion object {
-        const val AFTERLOGIN_REDIRECT = "/tasksPage/tasksPage.html"
-        const val LOG_PATH = "logs"
-        const val SIZE_CHECK_INTERVAL = 100
-        val logLock = ReentrantLock()
-        var lastSizeCheck = 0L
+    class Static {
+        companion object {
+            const val TASKS = "/tasksPage/tasksPage.html"
+            const val LOGIN = "/loginPage/loginPage.html"
+        }
+    }
+
+    class Logs {
+        companion object {
+            const val LOG = "logs"
+            const val SIZE_CHECK_INTERVAL = 100
+            val lock = ReentrantLock()
+            var lastSizeCheck = 0L
+        }
     }
 }
