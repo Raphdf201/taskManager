@@ -75,11 +75,11 @@ fun Application.configureSecurity() {
                         if (u == null) db.createUser(createdUser)
                         call.respondRedirect(Constants.Static.TASKS)
                     } catch (e: Exception) {
-                        call.respondRedirect("/login")
+                        call.respondRedirect(Constants.Static.LOGIN)
                         log("Error at ${Clock.System.now()} : ${e.message} ${e.stackTrace}")
                     }
                 } else {
-                    call.respondRedirect("/loginPage/loginPage.html")
+                    call.respondRedirect(Constants.Static.LOGIN)
                 }
             }
         }

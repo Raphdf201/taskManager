@@ -65,6 +65,7 @@ class DatabaseService(database: Database) {
 
     suspend fun createUser(user: ExposedUser): String = dbQuery {
         Users.insert {
+            it[id] = user.id
             it[name] = user.name
             it[profileIcon] = user.profileIcon
         }[Users.id]
