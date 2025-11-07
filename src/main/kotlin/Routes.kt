@@ -14,8 +14,8 @@ fun Application.configureDatabases() {
     db = DatabaseService(
         Database.connect(
             Constants.Database.URL,
-            Constants.Database.USER,
             Constants.Database.DRIVER,
+            Constants.Database.USER,
             Constants.Database.PASSWORD,
         )
     )
