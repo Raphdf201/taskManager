@@ -74,7 +74,7 @@ fun Application.configureSecurity() {
                         if (u == null) {
                             val created = ExposedUser(userInfo.id, userInfo.name, userInfo.picture)
                             println("created : $created")
-                            db.createUser(created)
+                            println("uid : ${db.createUser(created)}")
                         }
                         call.respondRedirect(Constants.Static.TASKS)
                     } catch (e: Exception) {
