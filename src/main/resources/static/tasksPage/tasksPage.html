@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des tâches 3990 </title>
+    <title>Gestion des tâches 3990</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Momo+Signature&display=swap" rel="stylesheet">
-    <link href="tasksPage.css" rel="stylesheet" type="text/css">
+    <link href="./tasksPage.css" rel="stylesheet" type="text/css">
     <link href="https://tech.team3990.com/favicon.ico" rel="shortcut icon" type="image/x-icon">
 </head>
 <body>
@@ -15,17 +15,19 @@
 <section id="menu" class="menu-section">
     <div class="menu-content">
         <div class="menu-title-container">
-            <svg class="signature-svg" viewBox="0 0 800 120">
-                <text x="10" y="80" class="sig-text-fill">Bonjour,</text>
-                <text x="10" y="80" class="sig-text">Bonjour,</text>
-                <text x="475" y="80" class="sig-text-fill sig-text-samy">Samy</text>
-                <text x="475" y="80" class="sig-text sig-text-samy">Samy</text>
+            <svg class="signature-svg" viewBox="0 0 1800 200" preserveAspectRatio="xMidYMid meet">
+
+                <rect x="150" y="60" width="1300" height="400" class="glow-rect" rx="20" ry="20"/>
+
+                <text x="200" y="140" class="sig-text">Bonjour,</text>
+                <text x="200" y="140" class="sig-text-fill">Bonjour,</text>
+                <text x="1000" y="140" class="sig-text sig-text-samy">Samy</text>
+                <text x="1000" y="140" class="sig-text-fill sig-text-samy">Samy</text>
             </svg>
         </div>
-        <h2 class="menu-subtitle">3990</h2>
         <p class="menu-description">
-            Équipe de robotique FRC
-       <p>
+            Équipe de robotique FRC 3990
+        </p>
     </div>
 </section>
 
@@ -35,11 +37,15 @@
         <div class="header" id="header">
             <div class="header-left">
                 <div class="header-nav-buttons">
-                    <a href="#menu" class="header-nav-btn   " data-section="menu" onclick="setActiveButton(this)">
-                        Menu
+                    <a href="#menu" class="header-nav-btn" data-section="menu">
+                        <span class="nav-icon-wrapper">
+                            <i data-lucide="home" style="width: 45px; height: 45px;"></i>
+                        </span>
                     </a>
-                    <a href="#tasks" class="header-nav-btn" data-section="tasks" onclick="setActiveButton(this)">
-                        Dashboard
+                    <a href="#tasks" class="header-nav-btn" data-section="tasks">
+                        <span class="nav-icon-wrapper">
+                            <i data-lucide="layout-dashboard" style="width: 45px; height: 45px;"></i>
+                        </span>
                     </a>
                 </div>
             </div>
@@ -149,7 +155,7 @@
                 </div>
                 <div class="modal-actions">
                     <button class="btn-secondary" onclick="closeModal()" type="button">Annuler</button>
-                    <button class="btn-submit" onclick="submitTask()" id="submit-btn" type="submit">Créer la tâche</button>
+                    <button class="btn-submit" onclick="submitTask(event)" id="submit-btn" type="submit">Créer la tâche</button>
                 </div>
             </form>
         </div>
@@ -157,53 +163,6 @@
 </div>
 
 <script src="https://unpkg.com/lucide@latest"></script>
-<script src="../common.js"></script>
 <script src="./tasksPage.js"></script>
-<script>
-    // Initialize Lucide icons
-    lucide.createIcons();
-
-    // Handle active navbar button
-    function setActiveButton(button) {
-        document.querySelectorAll('.header-nav-btn').forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-    }
-
-    // Header shrink on scroll
-    let lastScroll = 0;
-    window.addEventListener('scroll', () => {
-        const header = document.getElementById('header');
-        const currentScroll = window.scrollY;
-
-        // Add shrink class when scrolled down
-        if (currentScroll > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-
-        // Update active button based on scroll position
-        const sections = document.querySelectorAll('section');
-        const navButtons = document.querySelectorAll('.header-nav-btn');
-
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            if (currentScroll >= (sectionTop - 100)) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navButtons.forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.getAttribute('data-section') === current) {
-                btn.classList.add('active');
-            }
-        });
-
-        lastScroll = currentScroll;
-    });
-</script>
 </body>
 </html>

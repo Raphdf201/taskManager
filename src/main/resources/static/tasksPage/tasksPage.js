@@ -5,7 +5,7 @@ let allTasks = [];
 let isEditMode = false;
 let editingTaskId = null;
 let statsVisible = true;
-let hasAnimated = false; // NEW: Track if animations have played
+let hasAnimated = false;
 
 function toggleStats() {
     const statsGrid = document.querySelector('.stats-grid');
@@ -29,42 +29,81 @@ function toggleStats() {
     }, 500);
 }
 
-// NEW: Animate stat cards on page load
 function animateStats() {
     const statCards = document.querySelectorAll('.stat-card');
     statCards.forEach((card, index) => {
         setTimeout(() => {
             card.style.opacity = '1';
             card.style.transform = 'translateY(0) scale(1)';
-        }, index * 100); // 100ms delay between each card
+        }, index * 100);
     });
 }
 
-// NEW: Animate tasks on page load only (not on scroll)
 function animateTasksOnLoad() {
-    if (hasAnimated) return; // Don't re-animate
+    if (hasAnimated) return;
 
     const tasks = document.querySelectorAll('.task-card');
     tasks.forEach((task, index) => {
         setTimeout(() => {
             task.classList.add('visible');
-        }, 300 + (index * 75)); // Start after stats, 75ms between each
+        }, 300 + (index * 75));
     });
 
     hasAnimated = true;
 }
 
-window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
+let scrollTimeout;
 
-    if (currentScroll > lastScroll && currentScroll > 100) {
-        header.classList.add('hidden');
+window.addEventListener('scroll', () => {
+    const header = document.getElementById('header');
+    const currentScroll = window.scrollY;
+
+    if (currentScroll > 50) {
+        header.classList.add('scrolled');
     } else {
-        header.classList.remove('hidden');
+        header.classList.remove('scrolled');
     }
 
+    // Debounce the active button update
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+        const sections = document.querySelectorAll('section');
+        const navButtons = document.querySelectorAll('.header-nav-btn');
+
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (currentScroll >= (sectionTop - 200)) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-section') === current) {
+                btn.classList.add('active');
+            }
+        });
+    }, 100); // Wait 100ms after scrolling stops
+
     lastScroll = currentScroll;
-    // REMOVED: checkVisibility() call
+});
+
+function setActiveButton(button) {
+    document.querySelectorAll('.header-nav-btn').forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+}
+
+// Add click event listeners to navigation buttons
+document.addEventListener('DOMContentLoaded', () => {
+    const navButtons = document.querySelectorAll('.header-nav-btn');
+
+    navButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            setActiveButton(button);
+        });
+    });
 });
 
 function openModal() {
@@ -99,7 +138,7 @@ function isOverdue(dueDate) {
 function getTaskStatus(task) {
     if (task.status === 'done') return 'done';
     if (task.status === 'in_progress') return 'in_progress';
-    if (isOverdue(task.dueDate) && task.status !== 'done') return 'overdue'; // CHANGED: return 'overdue'
+    if (isOverdue(task.dueDate) && task.status !== 'done') return 'overdue';
     return 'todo';
 }
 
@@ -206,39 +245,39 @@ function createTaskCard(task) {
         : `<div class="avatar" style="background: ${creator.color};">${creator.initials}</div>`;
 
     return `
-                <div class="task-card" data-task-id="${task.id}">
-                    <div class="task-content">
-                        <div class="task-main">
-                            <div class="task-header">
-                                <i data-lucide="${statusIcon}"
-                                   style="width: 20px; height: 20px; color: ${statusColor}; flex-shrink: 0; margin-top: 2px;"></i>
-                                <div style="flex: 1;">
-                                    <div class="task-title">${task.title}</div>
-                                    <div class="task-description">${task.description}</div>
-                                    <div class="task-meta">
-                                        <div class="member-info">
-                                            <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748b;"></i>
-                                            <span>${formatDate(task.dueDate)}</span>
-                                        </div>
-                                        <div class="member-info">
-                                            ${avatarHTML}
-                                            <span>${creator.name}</span>
-                                        </div>
-                                    </div>
+        <div class="task-card" data-task-id="${task.id}">
+            <div class="task-content">
+                <div class="task-main">
+                    <div class="task-header">
+                        <i data-lucide="${statusIcon}"
+                           style="width: 20px; height: 20px; color: ${statusColor}; flex-shrink: 0; margin-top: 2px;"></i>
+                        <div style="flex: 1;">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-description">${task.description}</div>
+                            <div class="task-meta">
+                                <div class="member-info">
+                                    <i data-lucide="calendar" style="width: 16px; height: 16px; color: #64748b;"></i>
+                                    <span>${formatDate(task.dueDate)}</span>
+                                </div>
+                                <div class="member-info">
+                                    ${avatarHTML}
+                                    <span>${creator.name}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="task-actions">
-                            <button class="btn-icon btn-edit" onclick="editTask(${task.id})">
-                                <i data-lucide="edit-2" style="width: 16px; height: 16px;"></i>
-                            </button>
-                            <button class="btn-icon btn-delete" onclick="deleteTask(${task.id})">
-                                <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
-                            </button>
-                        </div>
                     </div>
                 </div>
-            `;
+                <div class="task-actions">
+                    <button class="btn-icon btn-edit" onclick="editTask(${task.id})">
+                        <i data-lucide="edit-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                    <button class="btn-icon btn-delete" onclick="deleteTask(${task.id})">
+                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 async function fetchTasks() {
@@ -260,10 +299,10 @@ async function fetchTasks() {
     } catch (error) {
         console.error('Error fetching tasks:', error);
         container.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: #ef4444;">
-                        Erreur lors du chargement des tâches: ${error.message}
-                    </div>
-                `;
+            <div style="text-align: center; padding: 2rem; color: #ef4444;">
+                Erreur lors du chargement des tâches: ${error.message}
+            </div>
+        `;
     }
 }
 
@@ -273,7 +312,7 @@ function updateStats(tasks) {
         todo: 0,
         in_progress: 0,
         done: 0,
-        overdue: 0 // NEW: Track overdue
+        overdue: 0
     };
 
     tasks.forEach(task => {
@@ -289,7 +328,6 @@ function updateStats(tasks) {
     document.getElementById('stat-progress').textContent = stats.in_progress;
     document.getElementById('stat-done').textContent = stats.done;
 
-    // NEW: Update overdue stat if element exists
     const overdueEl = document.getElementById('stat-overdue');
     if (overdueEl) {
         overdueEl.textContent = stats.overdue;
@@ -319,14 +357,14 @@ function displayFilteredTasks() {
 
     container.innerHTML = filteredTasks.map(task => createTaskCard(task)).join('');
 
-    // NEW: Trigger animation only on initial load
     if (!hasAnimated) {
         setTimeout(() => animateTasksOnLoad(), 100);
     } else {
-        // If already animated, show tasks immediately
         const tasks = document.querySelectorAll('.task-card');
         tasks.forEach(task => task.classList.add('visible'));
     }
+
+    lucide.createIcons();
 }
 
 function filterTasks(filter) {
@@ -341,7 +379,7 @@ function filterTasks(filter) {
         'todo': 1,
         'in_progress': 2,
         'done': 3,
-        'overdue': 4 // NEW: Add overdue to map
+        'overdue': 4
     };
 
     const activeCard = document.querySelectorAll('.stat-card')[filterMap[filter]];
@@ -485,20 +523,11 @@ async function editTask(taskId) {
     document.getElementById('modal').classList.add('active');
 }
 
-// NEW: Load and animate on page load
-document.addEventListener('DOMContentLoaded', async () => {
-    await fetchUsers();
-    await fetchTasks();
-
-    // Animate stats after a brief delay
-    setTimeout(() => animateStats(), 200);
-});
-
 async function checkAuthentication() {
     try {
         const response = await fetch('/isLoggedIn', {
             method: 'GET',
-            credentials: 'include', // Include cookies if needed
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -509,7 +538,6 @@ async function checkAuthentication() {
         }
 
         if (response.status === 401) {
-            // User is not authenticated, redirect to login
             window.location.href = '/loginPage/loginPage.html';
             return false;
         }
@@ -534,6 +562,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         console.log('User authenticated');
     }
+
+    await fetchUsers();
+    await fetchTasks();
+
+    setTimeout(() => animateStats(), 200);
+
+    // Add click event listeners to navigation buttons
+    const navButtons = document.querySelectorAll('.header-nav-btn');
+    navButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            setActiveButton(button);
+        });
+    });
 });
 
 lucide.createIcons();
