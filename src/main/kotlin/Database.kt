@@ -57,10 +57,10 @@ class DatabaseService(database: Database) {
     }
 
     init {
-        transaction(database) {
+        /*transaction(database) {
             SchemaUtils.drop(Users, Tasks)
             SchemaUtils.create(Users, Tasks)
-        }
+        }*/
     }
 
     suspend fun createUser(user: ExposedUser): String = dbQuery {

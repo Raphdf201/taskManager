@@ -41,9 +41,9 @@ fun Application.configureDatabases() {
         }
 
         get("/users") {
-            call.authorizedActionWithMessage {
-                db.getUsers()
-            }
+            val resp = db.getUsers()
+            println(resp)
+            call.respond(resp)
         }
 
         get("/users/{id}") {
