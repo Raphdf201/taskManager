@@ -58,9 +58,9 @@ suspend fun RoutingCall.authorizedAction(
  * If logged in, execute action and respond successCode + message
  * Else, respond {@link HttpStatusCode#Unauthorized}
  */
-suspend fun RoutingCall.authorizedActionWithMessage(
+suspend inline fun <reified T : Any>RoutingCall.authorizedActionWithMessage(
     successCode: HttpStatusCode = HttpStatusCode.OK,
-    action: suspend () -> Any
+    action: suspend () -> T
 ) {
     if (this.isLoggedIn()) {
         this.respond(successCode, action())

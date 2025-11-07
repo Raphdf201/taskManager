@@ -34,6 +34,7 @@ fun Application.configureDatabases() {
 
         post("/tasks") {
             val task = call.receive<ExposedTaskReceive>()
+            if (task.creatorId.isBlank()) call.respond(HttpStatusCode.BadRequest)
             call.authorizedActionWithMessage(HttpStatusCode.Created) {
                 db.createTask(task)
             }
