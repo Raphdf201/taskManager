@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap');
-
 html {
     scroll-behavior: smooth;
 }
 
-@font-face {
-    font-family: "Inter Tight";
+.momo-signature-regular {
+    font-family: "Momo Signature", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 * {
@@ -13,7 +13,93 @@ html {
     padding: 0;
     box-sizing: border-box;
 }
+.menu-title-container {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0;
+    line-height: 1;
+    justify-content: center;
+}
 
+.signature-svg {
+    width: auto;
+    height: 6rem;
+    flex-shrink: 0;
+}
+
+.sig-text {
+    font-family: 'Momo Signature', cursive;
+    font-size: 90px;
+    fill: none;
+    stroke: #2d2d2d;  /* Solid color instead of transparent */
+    stroke-width: 2;  /* Made slightly thicker so it's more visible */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 800;
+    stroke-dashoffset: 800;
+    animation: writeSignature 3s ease-in-out forwards;
+}
+
+.sig-text-fill {
+    font-family: 'Momo Signature', cursive;
+    font-size: 90px;
+    fill: #2d2d2d;
+    opacity: 0;
+    animation: fillSignature 0.1s ease-in forwards 2.5s;
+}
+
+@keyframes writeSignature {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes fillSignature {
+    to {
+        opacity: 1;
+    }
+}
+
+
+
+.menu-title-static {
+    font-size: 6rem;
+    font-weight: 700;
+    color: #2d2d2d;
+    line-height: 1;
+    letter-spacing: -2px;
+    margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .signature-svg {
+        height: 3.5rem;
+    }
+
+    .sig-text {
+        font-size: 55px;
+    }
+
+    .menu-title-static {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .signature-svg {
+        height: 2.5rem;
+    }
+
+    .sig-text {
+        font-size: 40px;
+    }
+
+    .menu-title-static {
+        font-size: 2.5rem;
+    }
+}
 .menu-section {
     background: linear-gradient(-200deg, #967bb6, #e0b0ff, #e0c8f9, #dfdff2, #cdc6ff);
     background-size: 400% 400%;
@@ -21,24 +107,15 @@ html {
     color: #2d2d2d;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;  /* ← CHANGED */
     padding: 8rem 4rem;
     min-height: 100vh;
-}
-
-@keyframes gradientFlow {
-    0%, 100% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
 }
 
 .menu-content {
     max-width: 900px;
     padding: 0;
-    text-align: left;
+    text-align: center;  /* ← CHANGED */
 }
 
 .menu-title {
