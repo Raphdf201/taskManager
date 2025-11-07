@@ -42,9 +42,9 @@ fun Application.configureDatabases() {
         }
 
         get("/users") {
-            val caca = Json.encodeToString(db.getUsers())
-            println(caca)
-            call.respondText(caca, ContentType.Application.Json)
+            call.authorizedActionWithMessage {
+                db.getUsers()
+            }
         }
 
         get("/users/{id}") {

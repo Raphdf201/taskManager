@@ -50,7 +50,7 @@ class DatabaseService(database: Database) {
         val description = varchar("description", 500)
         val priority = varchar("priority", 10)
         val status = varchar("status", 20)
-        val creatorId = varchar("creatorId", 50).references(Users.id)
+        val creatorId = varchar("creatorId", 50)
         val dueDate = varchar("dueDate", 10)
 
         override val primaryKey = PrimaryKey(id)
@@ -100,7 +100,7 @@ class DatabaseService(database: Database) {
 
     suspend fun getUsers(): List<ExposedUser> {
         return dbQuery {
-            Tasks.selectAll()
+            Users.selectAll()
                 .map {
                     ExposedUser(
                         it[Users.id],
