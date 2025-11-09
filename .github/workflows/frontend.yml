@@ -11,8 +11,8 @@ jobs:
       - name: Build
         run: |
           cd frontend
-          pnpm install
-          pnpm run lint
+          npm co
+          npm run lint
   build:
     runs-on: ubuntu-latest
     steps:
@@ -21,5 +21,5 @@ jobs:
       - name: Build
         run: |
           cd frontend
-          pnpm install
-          pnpm run build
+          npm ci
+          npm run build
