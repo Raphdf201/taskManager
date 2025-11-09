@@ -1,0 +1,93 @@
+.dock-outer {
+  display: flex;
+  max-width: 100%;
+}
+
+.dock-panel {
+  position: absolute;
+  bottom: 40%; /* Just above center — not too high, not too low */
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  border-radius: 1.6rem;
+  background: rgba(25, 25, 35, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 1.3rem 0.8rem;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.25),
+    inset 0 0 12px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 1000;
+}
+
+.dock-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 2px 8px rgba(255, 255, 255, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dock-item:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow:
+    inset 0 4px 14px rgba(255, 255, 255, 0.3),
+    0 8px 20px rgba(0, 0, 0, 0.18);
+  transform: scale(1.12);
+}
+
+.dock-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.3rem; /* Slightly larger icons */
+}
+
+.dock-icon svg {
+  width: 26px;
+  height: 26px;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+}
+
+.dock-label {
+  position: absolute;
+  left: calc(100% + 1rem);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  border-radius: 0.6rem;
+  background: rgba(30, 30, 45, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+  color: #fff;
+  box-shadow:
+    0 5px 12px rgba(0, 0, 0, 0.15),
+    inset 0 1px 3px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.dock-item:hover .dock-label {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(8px);
+}
