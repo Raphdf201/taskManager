@@ -11,7 +11,7 @@ jobs:
       - name: Build
         run: |
           cd frontend
-          npm co
+          npm ci
           npm run lint
   build:
     runs-on: ubuntu-latest
