@@ -1,56 +1,195 @@
-openapi: "3.0.3"
+openapi: 3.1.0
 info:
-  title: "Task manager API"
-  description: "The tech task manager"
-  version: "1.0.0"
-servers:
-  - url: "https://commtasks.raphdf201.net"
+  title: Task manager API
+  description: The tech task manager
+  version: 1.0.0
+tags: []
 paths:
   /tasks:
-    get:
-      description: "Creates a new customer"
+    post:
+      summary: /tasks
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
       requestBody:
-        description: "A JSON object containing customer information"
-        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Customer"
+              type: object
+              properties:
+                id:
+                  type: integer
+                title:
+                  type: string
+                  description: max 50 chars
+                description:
+                  type: string
+                  description: max 500 chars
+                priority:
+                  type: string
+                  description: low, medium or high
+                status:
+                  type: string
+                  description: todo, in_progress or done
+                creatorId:
+                  type: string
+                  description: same as user id
+                dueDate:
+                  type: string
+                  description: yyyy-mm-dd
+            examples:
+              '1':
+                value:
+                  title: Task name
+                  description: task description
+                  dueDate: '2025-12-25'
+                  status: todo
+                  priority: high
+                  creatorId: 1
+                summary: Example todo-high
+              '2':
+                value:
+                  title: Task name
+                  description: task description
+                  dueDate: '2025-12-25'
+                  status: in_progress
+                  priority: medium
+                  creatorId: 1
+                summary: Example inprogress-medium
+              '3':
+                value:
+                  title: Task name
+                  description: task description
+                  dueDate: '2025-12-25'
+                  status: done
+                  priority: low
+                  creatorId: 1
+                summary: Example 3 done-low
+        required: true
       responses:
-        "201":
-          description: "Created"
+        '201':
+          description: The task id
           content:
-            text/plain:
+            application/json:
               schema:
-                $ref: "#/components/schemas/Task"
-              examples:
-                Example#1:
-                  value: "Customer stored correctly"
-  /customer/{id}:
+                type: integer
+          headers: {}
+      security: []
     get:
-      description: "Returns a customer by its ID"
+      summary: /tasks
+      deprecated: false
+      description: ''
+      tags: []
       parameters:
-        - name: "id"
-          in: "path"
-          required: true
+        - name: techTaskManager
+          in: cookie
+          description: ''
+          required: false
+          example: ''
           schema:
-            type: "string"
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+            examples: {}
+        required: true
       responses:
-        "200":
-          description: "OK"
+        '200':
+          description: Created
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: "#/components/schemas/Customer"
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExposedTaskReceive'
+              example:
+                - id: 4
+                  title: Test1
+                  description: d1
+                  priority: medium
+                  status: in_progress
+                  creatorId: '108435062937712563528'
+                  dueDate: '1231-02-03'
+          headers: {}
+      security: []
+webhooks: {}
 components:
   schemas:
-    Task:
-      type: "object"
+    ExposedUser:
+      type: object
       properties:
         id:
-          type: "integer"
-          format: "int32"
-        firstName:
-          type: "string"
-        lastName:
-          type: "string"
+          type: string
+        name:
+          type: string
+        profileIcon:
+          type:
+            - string
+            - 'null'
+    ExposedTaskSend:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          description: max 50 chars
+        description:
+          type: string
+          description: max 500 chars
+        priority:
+          type: string
+          description: low, medium or high
+        status:
+          type: string
+          description: todo, in_progress or done
+        creatorId:
+          type: string
+          description: same as user id
+        dueDate:
+          type: string
+          description: yyyy-mm-dd
+    ExposedTaskReceive:
+      type: object
+      properties:
+        title:
+          type: string
+          description: max 50 chars
+          maxLength: 50
+        description:
+          type: string
+          description: max 500 chars
+          maxLength: 500
+        priority:
+          type: string
+          description: low, medium or high
+          enum:
+            - low
+            - medium
+            - high
+        status:
+          type: string
+          description: todo, in_progress or done
+          enum:
+            - todo
+            - in_progress
+            - done
+        creatorId:
+          type: string
+          description: same as user id
+        dueDate:
+          type: string
+          description: yyyy-mm-dd
+          pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$
+          examples:
+            - '2025-12-25'
+          format: date
+  securitySchemes: {}
+servers:
+  - url: https://commtasks.raphdf201.net
+    description: https://commtasks.raphdf201.net
+security: []
