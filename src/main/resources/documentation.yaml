@@ -1,56 +1,539 @@
-openapi: "3.0.3"
+openapi: 3.1.0
 info:
-  title: "Task manager API"
-  description: "The tech task manager"
-  version: "1.0.0"
-servers:
-  - url: "https://commtasks.raphdf201.net"
+  title: Task manager API
+  description: The tech task manager
+  version: 1.0.0
+tags: []
 paths:
   /tasks:
-    get:
-      description: "Creates a new customer"
+    post:
+      summary: /tasks
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: techTaskManager
+          in: cookie
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
       requestBody:
-        description: "A JSON object containing customer information"
-        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Customer"
+              type: object
+              properties:
+                id:
+                  type: integer
+                  x-apidog-mock: '{{$number.int(min=1)}}'
+                title:
+                  type: string
+                  description: max 50 chars
+                description:
+                  type: string
+                  description: max 500 chars
+                priority:
+                  type: string
+                  description: low, medium or high
+                status:
+                  type: string
+                  description: todo, in_progress or done
+                creatorId:
+                  type: string
+                  description: same as user id
+                dueDate:
+                  type: string
+                  description: yyyy-mm-dd
+              x-apidog-orders:
+                - 01K9JW9D9KTR79MNFZMBSTP1Z2
+              x-apidog-refs:
+                01K9JW9D9KTR79MNFZMBSTP1Z2:
+                  $ref: '#/components/schemas/ExposedTaskSend'
+              x-apidog-ignore-properties:
+                - id
+                - title
+                - description
+                - priority
+                - status
+                - creatorId
+                - dueDate
+            examples:
+              '1':
+                value:
+                  title: Task name
+                  description: task description
+                  dueDate: '2025-12-25'
+                  status: todo
+                  priority: high
+                  creatorId: 1
+                summary: Example todo-high
+              '2':
+                value:
+                  title: Task name
+                  description: task description
+                  dueDate: '2025-12-25'
+                  status: in_progress
+                  priority: medium
+                  creatorId: 1
+                summary: Example inprogress-medium
+              '3':
+                value:
+                  title: Task name
+                  description: task description
+                  dueDate: '2025-12-25'
+                  status: done
+                  priority: low
+                  creatorId: 1
+                summary: Example 3 done-low
+        required: true
       responses:
-        "201":
-          description: "Created"
+        '201':
+          description: The task id
           content:
-            text/plain:
+            application/json:
               schema:
-                $ref: "#/components/schemas/Task"
-              examples:
-                Example#1:
-                  value: "Customer stored correctly"
-  /customer/{id}:
+                type: integer
+                x-apidog-mock: '{{$number.int(min=1)}}'
+          headers: {}
+          x-apidog-name: Created
+      security: []
+      x-apidog-folder: ''
+      x-apidog-status: released
+      x-run-in-apidog: https://app.apidog.com/web/project/1121599/apis/api-23994207-run
     get:
-      description: "Returns a customer by its ID"
+      summary: /tasks
+      deprecated: false
+      description: ''
+      tags: []
       parameters:
-        - name: "id"
-          in: "path"
+        - name: techTaskManager
+          in: cookie
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+              x-apidog-ignore-properties: []
+              x-apidog-orders: []
+            examples: {}
+        required: true
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExposedTaskReceive'
+              example:
+                - id: 4
+                  title: Test1
+                  description: d1
+                  priority: medium
+                  status: in_progress
+                  creatorId: '108435062937712563528'
+                  dueDate: '1231-02-03'
+          headers: {}
+          x-apidog-name: Ok
+      security: []
+      x-apidog-folder: ''
+      x-apidog-status: released
+      x-run-in-apidog: https://app.apidog.com/web/project/1121599/apis/api-23994152-run
+  /users:
+    get:
+      summary: /users
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: techTaskManager
+          in: cookie
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExposedUser'
+          headers: {}
+          x-apidog-name: Success
+      security: []
+      x-apidog-folder: ''
+      x-apidog-status: released
+      x-run-in-apidog: https://app.apidog.com/web/project/1121599/apis/api-23994990-run
+  /users/{id}:
+    get:
+      summary: /users/{id}
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: techTaskManager
+          in: cookie
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ''
           required: true
           schema:
-            type: "string"
+            type: string
       responses:
-        "200":
-          description: "OK"
+        '200':
+          description: ''
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: "#/components/schemas/Customer"
+                $ref: '#/components/schemas/ExposedUser'
+          headers: {}
+          x-apidog-name: Success
+      security: []
+      x-apidog-folder: ''
+      x-apidog-status: released
+      x-run-in-apidog: https://app.apidog.com/web/project/1121599/apis/api-23995005-run
+    put:
+      summary: /users/{id}
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: techTaskManager
+          in: cookie
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExposedUser'
+            examples: {}
+        required: true
+      responses:
+        '204':
+          description: ''
+          headers: {}
+          x-apidog-name: No content
+      security: []
+      x-apidog-folder: ''
+      x-apidog-status: released
+      x-run-in-apidog: https://app.apidog.com/web/project/1121599/apis/api-23995007-run
+    delete:
+      summary: /users/{id}
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: techTaskManager
+          in: cookie
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: ''
+          headers: {}
+          x-apidog-name: No content
+      security: []
+      x-apidog-folder: ''
+      x-apidog-status: released
+      x-run-in-apidog: https://app.apidog.com/web/project/1121599/apis/api-23995020-run
+  /tasks/{id}:
+    put:
+      summary: /tasks{id}
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: techTaskManager
+          in: cookie
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExposedTaskSend'
+            examples: {}
+        required: true
+      responses:
+        '204':
+          description: ''
+          headers: {}
+          x-apidog-name: No content
+      security: []
+      x-apidog-folder: ''
+      x-apidog-status: released
+      x-run-in-apidog: https://app.apidog.com/web/project/1121599/apis/api-23995010-run
+    get:
+      summary: /tasks/{id}
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: techTaskManager
+          in: cookie
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExposedTaskSend'
+          headers: {}
+          x-apidog-name: Success
+      security: []
+      x-apidog-folder: ''
+      x-apidog-status: released
+      x-run-in-apidog: https://app.apidog.com/web/project/1121599/apis/api-23995017-run
+    delete:
+      summary: /tasks/{id}
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: techTaskManager
+          in: cookie
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: ''
+          headers: {}
+          x-apidog-name: No content
+      security: []
+      x-apidog-folder: ''
+      x-apidog-status: released
+      x-run-in-apidog: https://app.apidog.com/web/project/1121599/apis/api-23995019-run
+  /login:
+    get:
+      summary: /login
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      responses:
+        '302':
+          description: ''
+          headers: {}
+          x-apidog-name: Found redirect
+      security: []
+      x-apidog-folder: ''
+      x-apidog-status: released
+      x-run-in-apidog: https://app.apidog.com/web/project/1121599/apis/api-23995043-run
+  /isLoggedIn:
+    get:
+      summary: /isLoggedIn
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: techTaskManager
+          in: cookie
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          x-apidog-name: Success
+        '401':
+          description: ''
+          headers: {}
+          x-apidog-name: Unauthorized
+      security: []
+      x-apidog-folder: ''
+      x-apidog-status: released
+      x-run-in-apidog: https://app.apidog.com/web/project/1121599/apis/api-23995044-run
+webhooks: {}
 components:
   schemas:
-    Task:
-      type: "object"
+    ExposedUser:
+      type: object
       properties:
         id:
-          type: "integer"
-          format: "int32"
-        firstName:
-          type: "string"
-        lastName:
-          type: "string"
+          type: string
+        name:
+          type: string
+          x-apidog-mock: '{{$person.fullName}}'
+        profileIcon:
+          type:
+            - string
+            - 'null'
+          x-apidog-mock: '{{$internet.url}}'
+      x-apidog-orders:
+        - id
+        - name
+        - profileIcon
+      x-apidog-ignore-properties: []
+      x-apidog-folder: ''
+    ExposedTaskSend:
+      type: object
+      properties:
+        id:
+          type: integer
+          x-apidog-mock: '{{$number.int(min=1)}}'
+        title:
+          type: string
+          description: max 50 chars
+        description:
+          type: string
+          description: max 500 chars
+        priority:
+          type: string
+          description: low, medium or high
+        status:
+          type: string
+          description: todo, in_progress or done
+        creatorId:
+          type: string
+          description: same as user id
+        dueDate:
+          type: string
+          description: yyyy-mm-dd
+      x-apidog-orders:
+        - id
+        - title
+        - description
+        - priority
+        - status
+        - creatorId
+        - dueDate
+      x-apidog-ignore-properties: []
+      x-apidog-folder: ''
+    ExposedTaskReceive:
+      type: object
+      properties:
+        title:
+          type: string
+          description: max 50 chars
+          maxLength: 50
+        description:
+          type: string
+          description: max 500 chars
+          maxLength: 500
+        priority:
+          type: string
+          description: low, medium or high
+          enum:
+            - low
+            - medium
+            - high
+          x-apidog-enum:
+            - value: low
+              name: ''
+              description: ''
+            - value: medium
+              name: ''
+              description: ''
+            - value: high
+              name: ''
+              description: ''
+        status:
+          type: string
+          description: todo, in_progress or done
+          enum:
+            - todo
+            - in_progress
+            - done
+          x-apidog-enum:
+            - value: todo
+              name: ''
+              description: ''
+            - value: in_progress
+              name: ''
+              description: ''
+            - value: done
+              name: ''
+              description: ''
+        creatorId:
+          type: string
+          description: same as user id
+        dueDate:
+          type: string
+          description: yyyy-mm-dd
+          pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$
+          examples:
+            - '2025-12-25'
+          format: date
+      x-apidog-orders:
+        - title
+        - description
+        - priority
+        - status
+        - creatorId
+        - dueDate
+      x-apidog-ignore-properties: []
+      x-apidog-folder: ''
+  securitySchemes: {}
+servers:
+  - url: https://commtasks.raphdf201.net
+    description: https://commtasks.raphdf201.net
+security: []

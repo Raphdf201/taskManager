@@ -6,7 +6,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
-import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
 
 lateinit var db: DatabaseService
@@ -33,11 +32,31 @@ fun Application.configureDatabases() {
             }
         }
 
+        get("/tasks/{id}") {
+            val task = db.getTask(call.parameters["id"]?.toInt())
+            if (task != null) call.respond(task)
+            else call.respond(HttpStatusCode.NotFound)
+        }
+
         post("/tasks") {
             val task = call.receive<ExposedTaskReceive>()
-            if (task.creatorId.isBlank()) call.respond(HttpStatusCode.BadRequest)
             call.authorizedActionWithMessage(HttpStatusCode.Created) {
                 db.createTask(task)
+            }
+        }
+
+        put("/tasks/{id}") {
+            call.authorizedAction(HttpStatusCode.NoContent) {
+                db.updateTask(
+                    call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID"),
+                    call.receive<ExposedTaskReceive>()
+                )
+            }
+        }
+
+        delete("/tasks/{id}") {
+            call.authorizedAction(HttpStatusCode.NoContent) {
+                db.deleteTask(call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID"))
             }
         }
 
@@ -54,30 +73,14 @@ fun Application.configureDatabases() {
         }
 
         put("/users/{id}") {
-            call.authorizedAction {
+            call.authorizedAction(HttpStatusCode.NoContent) {
                 db.updateUser(call.parameters["id"], call.receive<ExposedUser>())
-            }
-        }
-
-        put("/tasks/{id}") {
-            val task = call.receive<ExposedTaskReceive>()
-            call.authorizedAction(message = task) {
-                db.updateTask(
-                    call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID"),
-                    task
-                )
             }
         }
 
         delete("/users/{id}") {
             call.authorizedAction(HttpStatusCode.NoContent) {
                 db.deleteUser(call.parameters["id"])
-            }
-        }
-
-        delete("/tasks/{id}") {
-            call.authorizedAction(HttpStatusCode.NoContent) {
-                db.deleteTask(call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID"))
             }
         }
 

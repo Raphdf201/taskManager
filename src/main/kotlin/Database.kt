@@ -111,6 +111,26 @@ class DatabaseService(database: Database) {
         }
     }
 
+    suspend fun getTask(id: Int?): ExposedTaskSend? {
+        if (id == null) return null
+        return dbQuery {
+            Tasks.selectAll()
+                .where { Tasks.id eq id }
+                .map {
+                    ExposedTaskSend(
+                        it[Tasks.id],
+                        it[Tasks.title],
+                        it[Tasks.description],
+                        it[Tasks.priority],
+                        it[Tasks.status],
+                        it[Tasks.creatorId],
+                        it[Tasks.dueDate]
+                    )
+                }
+                .singleOrNull()
+        }
+    }
+
     suspend fun getTasks(): List<ExposedTaskSend> {
         return dbQuery {
             Tasks.selectAll()
