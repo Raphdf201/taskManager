@@ -1,9 +1,9 @@
-name: Backend
+name: Build
 
 on: push
 
 jobs:
-  build:
+  backend:
     runs-on: ubuntu-latest
     steps:
       - name: checkout code
@@ -19,3 +19,14 @@ jobs:
           cache-disabled: false
       - name: Build
         run: chmod +x ./gradlew && ./gradlew build
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v5
+      - name: Build
+        run: |
+          cd frontend
+          npm i
+          npm run build
