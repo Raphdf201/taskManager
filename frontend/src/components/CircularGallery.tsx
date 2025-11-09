@@ -247,16 +247,15 @@ class Media {
       }
     }
     this.scale = this.screen.height / 1500;
-    // Made cards bigger: increased from 900 to 1100 for height and 700 to 900 for width
     this.plane.scale.y =
-      (this.viewport.height * (1100 * this.scale)) / this.screen.height;
+      (this.viewport.height * (600 * this.scale)) / this.screen.height;
     this.plane.scale.x =
-      (this.viewport.width * (900 * this.scale)) / this.screen.width;
+      (this.viewport.width * (500 * this.scale)) / this.screen.width;
     this.plane.program.uniforms.uPlaneSizes.value = [
       this.plane.scale.x,
       this.plane.scale.y,
     ];
-    this.padding = 2;
+    this.padding = 0.8;
     this.width = this.plane.scale.x + this.padding;
     this.widthTotal = this.width * this.length;
     this.x = this.width * this.index;
@@ -362,28 +361,28 @@ class App {
   ) {
     const defaultItems = [
       {
-        image: "./public/robot3990_2019.jpg",
+        image: "./robot3990_2019.jpg",
       },
       {
-        image: "./public/robot3990_2020.jpg",
+        image: "./robot3990_2020.jpg",
       },
       {
-        image: "./public/robot3990_2022.png",
+        image: "./robot3990_2022.png",
       },
       {
-        image: "./public/robot3990_2024.jpg",
+        image: "./robot3990_2024.jpg",
       },
       {
-        image: "./public/robot9406_2024.jpg",
+        image: "./robot9406_2024.jpg",
       },
       {
-        image: "./public/robot3990_2020.jpg",
+        image: "./robot3990_2020.jpg",
       },
        {
-        image: "./public/robot3990_2019.jpg",
+        image: "./robot3990_2019.jpg",
       },
       {
-        image: "./public/robot9406_2024.jpg",
+        image: "./robot9406_2024.jpg",
       },
     ];
     const galleryItems = items && items.length ? items : defaultItems;
