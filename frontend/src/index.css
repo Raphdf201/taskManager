@@ -18,3 +18,46 @@ html, body {
     height: 100vh;
     background-color: #000000;
 }
+
+/* TextType Component Styles */
+.text-type {
+    display: inline-block;
+    white-space: pre-wrap;
+}
+
+.text-type__cursor {
+    margin-left: 0.25rem;
+    display: inline-block;
+    opacity: 1;
+}
+
+.text-type__cursor--hidden {
+    display: none;
+}
+
+/* Centered Text Styling */
+.centered-text {
+    font-size: 8.5rem;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    font-family: 'Work Sans', sans-serif;
+    margin-bottom: 2rem;
+
+    text-shadow: 
+        0 0 15px rgb(255, 255, 255),
+        0 0 25px rgb(255, 255, 255),
+}
+
+/* Optional: Responsive text size */
+@media (max-width: 768px) {
+    .centered-text {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .centered-text {
+        font-size: 1.5rem;
+    }
+}
