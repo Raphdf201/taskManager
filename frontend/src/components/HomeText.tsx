@@ -47,7 +47,6 @@ const TextType = ({
   ...props
 }: TextTypeProps & React.HTMLAttributes<HTMLElement>) => {
   const [displayedText, setDisplayedText] = useState('');
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(!startOnVisible);
@@ -101,57 +100,51 @@ const TextType = ({
   useEffect(() => {
     if (!isVisible) return;
 
-    let timeout: NodeJS.Timeout;
-
     const currentText = textArray[currentTextIndex];
     const processedText = reverseMode ? currentText.split('').reverse().join('') : currentText;
 
-    const executeTypingAnimation = () => {
-      if (isDeleting) {
-        if (displayedText === '') {
-          setIsDeleting(false);
-          if (currentTextIndex === textArray.length - 1 && !loop) {
-            return;
-          }
+    let timeout: NodeJS.Timeout;
 
-          if (onSentenceComplete) {
-            onSentenceComplete(textArray[currentTextIndex], currentTextIndex);
-          }
-
-          setCurrentTextIndex(prev => (prev + 1) % textArray.length);
-          setCurrentCharIndex(0);
-          timeout = setTimeout(() => {}, pauseDuration);
-        } else {
-          timeout = setTimeout(() => {
-            setDisplayedText(prev => prev.slice(0, -1));
-          }, deletingSpeed);
-        }
+    // Typing phase
+    if (!isDeleting) {
+      if (displayedText.length < processedText.length) {
+        timeout = setTimeout(() => {
+          setDisplayedText(processedText.slice(0, displayedText.length + 1));
+        }, displayedText.length === 0 ? initialDelay : (variableSpeed ? getRandomSpeed() : typingSpeed));
       } else {
-        if (currentCharIndex < processedText.length) {
-          timeout = setTimeout(
-            () => {
-              setDisplayedText(prev => prev + processedText[currentCharIndex]);
-              setCurrentCharIndex(prev => prev + 1);
-            },
-            variableSpeed ? getRandomSpeed() : typingSpeed
-          );
-        } else if (textArray.length > 1) {
-          timeout = setTimeout(() => {
-            setIsDeleting(true);
-          }, pauseDuration);
-        }
+        // Finished typing, pause then start deleting
+        timeout = setTimeout(() => {
+          setIsDeleting(true);
+        }, pauseDuration);
       }
-    };
+    } 
+    // Deleting phase
+    else {
+      if (displayedText.length > 0) {
+        timeout = setTimeout(() => {
+          setDisplayedText(prev => prev.slice(0, -1));
+        }, deletingSpeed);
+      } else {
+        // Finished deleting
+        if (currentTextIndex === textArray.length - 1 && !loop) {
+          // Stop if last text and not looping
+          return;
+        }
 
-    if (currentCharIndex === 0 && !isDeleting && displayedText === '') {
-      timeout = setTimeout(executeTypingAnimation, initialDelay);
-    } else {
-      executeTypingAnimation();
+        if (onSentenceComplete) {
+          onSentenceComplete(textArray[currentTextIndex], currentTextIndex);
+        }
+
+        // Reset for next text
+        timeout = setTimeout(() => {
+          setIsDeleting(false);
+          setCurrentTextIndex(prev => (prev + 1) % textArray.length);
+        }, pauseDuration / 2);
+      }
     }
 
     return () => clearTimeout(timeout);
   }, [
-    currentCharIndex,
     displayedText,
     isDeleting,
     typingSpeed,
@@ -164,11 +157,12 @@ const TextType = ({
     isVisible,
     reverseMode,
     variableSpeed,
+    getRandomSpeed,
     onSentenceComplete
   ]);
 
   const shouldHideCursor =
-    hideCursorWhileTyping && (currentCharIndex < textArray[currentTextIndex].length || isDeleting);
+    hideCursorWhileTyping && (displayedText.length < textArray[currentTextIndex].length || isDeleting);
 
   return createElement(
     Component,

@@ -64,8 +64,8 @@ const App = () => {
           text={["Bonjour, Samy!"]}
           as="h1"
           typingSpeed={120}
-          deletingSpeed={40}
-          pauseDuration={10}
+          deletingSpeed={60}
+          pauseDuration={1000}
           loop={true}
           showCursor={true}
           textColors={["#ffffffff", "#fffffff", "#ffffff"]}
@@ -74,17 +74,16 @@ const App = () => {
         <div className="rotating-text-container">
           <span className="welcome-text">Bienvenue</span>
           <RotatingText
-            texts={["chez 3990!", "en comm!"]}
+            texts={["chez T4K!", "en comm!"]}
             mainClassName="rotating-text-styled"
-            staggerFrom="last"
+            staggerFrom="first"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "-120%" }}
             staggerDuration={0.015}
             splitLevelClassName="overflow-hidden"
-            transition={{ type:"spring", damping: 30, stiffness: 400 }}
-            rotationInterval={2000}
-          />
+            transition={{ type:"spring", damping: 30, stiffness: 500 }}
+            rotationInterval={1500}/>
         </div>
 
         <div
@@ -96,7 +95,7 @@ const App = () => {
           }}
         >
           <div className="circular-gallery-container">
-            <CircularGallery bend={3} borderRadius={0.15} scrollEase={0.02} />
+            <CircularGallery bend={0.3} borderRadius={0.15} scrollEase={0.02} />
           </div>
         </div>
       </div>
