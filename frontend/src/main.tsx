@@ -7,16 +7,37 @@ import RotatingText from "./components/RotatingText";
 import CircularGallery from "./components/CircularGallery";
 import TargetCursor from "./components/TargetCursor";
 import Dock from "./components/Dock";
-import { VscHome, VscArchive, VscAccount, VscSettingsGear } from "react-icons/vsc";
+import {
+  VscHome,
+  VscChecklist,
+  VscAccount,
+  VscSettingsGear,
+} from "react-icons/vsc";
 
 // Create a proper App component
 const App = () => {
   // Define dock items
   const items = [
-    { icon: <VscHome size={18} />, label: 'Home', onClick: () => alert('Home!') },
-    { icon: <VscArchive size={18} />, label: 'Archive', onClick: () => alert('Archive!') },
-    { icon: <VscAccount size={18} />, label: 'Profile', onClick: () => alert('Profile!') },
-    { icon: <VscSettingsGear size={18} />, label: 'Settings', onClick: () => alert('Settings!') },
+    {
+      icon: <VscHome size={18} />,
+      label: "Menu",
+      onClick: () => alert("Menu!"),
+    },
+    {
+      icon: <VscChecklist size={18} />,
+      label: "Tâches",
+      onClick: () => alert("Tâches!"),
+    },
+    {
+      icon: <VscAccount size={18} />,
+      label: "Membres",
+      onClick: () => alert("Membres!"),
+    },
+    {
+      icon: <VscSettingsGear size={18} />,
+      label: "Settings",
+      onClick: () => alert("Settings!"),
+    },
   ];
 
   return (
@@ -28,7 +49,7 @@ const App = () => {
         backgroundColor: "#000000",
       }}
     >
-      <TargetCursor 
+      <TargetCursor
         spinDuration={2}
         hideDefaultCursor={true}
         parallaxOn={true}
@@ -82,8 +103,9 @@ const App = () => {
             exit={{ y: "-120%" }}
             staggerDuration={0.015}
             splitLevelClassName="overflow-hidden"
-            transition={{ type:"spring", damping: 30, stiffness: 500 }}
-            rotationInterval={1500}/>
+            transition={{ type: "spring", damping: 30, stiffness: 500 }}
+            rotationInterval={1500}
+          />
         </div>
 
         <div
@@ -100,12 +122,18 @@ const App = () => {
         </div>
       </div>
 
-      {/* Dock at the bottom */}
-      <Dock 
+      {/* Dock at the top - horizontal */}
+      <Dock
         items={items}
-        panelHeight={320}
-        baseItemSize={56}
-        magnification={70}
+        panelHeight={90} // Height of the horizontal dock
+        baseItemSize={70}
+        magnification={75} // How big icons get on hover
+        distance={150} // Distance for magnification effect
+        spring={{
+          mass: 0.15,
+          stiffness: 200,
+          damping: 15,
+        }}
       />
     </div>
   );
