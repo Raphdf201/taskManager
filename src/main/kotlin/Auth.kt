@@ -43,12 +43,62 @@ fun Application.configureSecurity() {
             }
             client = httpClient
         }
+        oauth("auth-oauth-google-dev") {
+            urlProvider = { Constants.Auth.CALLBACK + "/dev" }
+            providerLookup = {
+                OAuthServerSettings.OAuth2ServerSettings(
+                    Constants.Auth.NAME,
+                    Constants.Auth.AUTHORIZE_URL,
+                    Constants.Auth.ACCESS_TOKEN_URL,
+                    HttpMethod.Post,
+                    Constants.Auth.CLIENT_ID,
+                    Constants.Auth.CLIENT_SECRET,
+                    Constants.Auth.DEFAULT_SCOPES
+                )
+            }
+            client = httpClient
+        }
     }
 
     routing {
         authenticate("auth-oauth-google") {
             get("/login") {}
             get("/callback") {
+                val principal: OAuthAccessTokenResponse.OAuth2? = call.authentication.principal()
+                if (principal != null) {
+                    try {
+                        // Fetch user info from Google
+                        val userInfo = httpClient.get("https://www.googleapis.com/oauth2/v2/userinfo") {
+                            headers {
+                                append("Authorization", "Bearer ${principal.accessToken}")
+                            }
+                        }.body<GoogleUserInfo>()
+
+                        call.sessions.set(
+                            UserSession(
+                                true,
+                                principal.accessToken,
+                                userInfo.id,
+                                userInfo.name,
+                                userInfo.picture
+                            )
+                        )
+
+                        val u = db.getUser(userInfo.id)
+                        if (u == null) db.createUser(ExposedUser(userInfo.id, userInfo.name, userInfo.picture))
+                        call.respondRedirect(Constants.Static.TASKS)
+                    } catch (e: Exception) {
+                        call.respondRedirect(Constants.Static.LOGIN)
+                        log("Error at ${Clock.System.now()} : ${e.message} ${e.stackTrace}")
+                    }
+                } else {
+                    call.respondRedirect(Constants.Static.LOGIN)
+                }
+            }
+        }
+        authenticate("auth-oauth-google-dev") {
+            get("/login/dev") {}
+            get("/callback" + "/dev") {
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.authentication.principal()
                 if (principal != null) {
                     try {
