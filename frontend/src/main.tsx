@@ -15,9 +15,7 @@ import {
 import TargetCursor from "./components/TargetCursor";
 import UserBoxPanel from "./components/UserBoxPanel";
 
-// Create a proper App component
 const App = () => {
-  // Define dock items
   const items = [
     {
       icon: <VscHome size={18} />,
@@ -50,8 +48,6 @@ const App = () => {
         backgroundColor: "#000000",
       }}
     >
-       
-      {/* Aurora Background */}
       <div style={{ position: "absolute", inset: 0 }}>
         <Aurora
           colorStops={["#ffff2e", "#ed8ef5", "#000000"]}
@@ -67,7 +63,6 @@ const App = () => {
         parallaxOn={true}
       />
 
-      {/* Content Layer */}
       <div
         style={{
           position: "relative",
@@ -83,7 +78,6 @@ const App = () => {
           gap: "1rem",
         }}
       >
-        {/* Text Components */}
         <HomeText
           text={["Bonjour, Samy!"]}
           as="h1"
@@ -136,14 +130,12 @@ const App = () => {
 
       <UserBoxPanel />
 
-
-      {/* Dock at the top - horizontal */}
       <Dock
         items={items}
-        panelHeight={90} // Height of the horizontal dock
+        panelHeight={90}
         baseItemSize={70}
-        magnification={75} // How big icons get on hover
-        distance={150} // Distance for magnification effect
+        magnification={75}
+        distance={150}
         spring={{
           mass: 0.15,
           stiffness: 200,
