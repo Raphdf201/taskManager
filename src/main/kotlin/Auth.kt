@@ -89,7 +89,7 @@ fun Application.configureSecurity() {
                         call.respondRedirect(Constants.Static.TASKS)
                     } catch (e: Exception) {
                         call.respondRedirect(Constants.Static.LOGIN)
-                        log("Error at ${Clock.System.now()} : ${e.message} ${e.stackTrace}")
+                        log("Error at ${Clock.System.now()} : google login ${e.message} ${e.stackTrace}")
                     }
                 } else {
                     call.respondRedirect(Constants.Static.LOGIN)
@@ -122,13 +122,12 @@ fun Application.configureSecurity() {
                         val u = db.getUser(userInfo.id)
                         if (u == null) db.createUser(ExposedUser(userInfo.id, userInfo.name, userInfo.picture))
                         call.respondRedirect(Constants.Static.TASKS)
+                        return@get
                     } catch (e: Exception) {
-                        call.respondRedirect(Constants.Static.LOGIN)
-                        log("Error at ${Clock.System.now()} : ${e.message} ${e.stackTrace}")
+                        log("Error at ${Clock.System.now()} : dev login ${e.message} ${e.stackTrace}")
                     }
-                } else {
-                    call.respondRedirect(Constants.Static.LOGIN)
                 }
+                call.respondRedirect(Constants.Static.LOGIN)
             }
         }
 
