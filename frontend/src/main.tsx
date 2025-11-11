@@ -5,7 +5,6 @@ import Aurora from "./components/Aurora";
 import HomeText from "./components/HomeText";
 import RotatingText from "./components/RotatingText";
 import CircularGallery from "./components/CircularGallery";
-import TargetCursor from "./components/TargetCursor";
 import Dock from "./components/Dock";
 import {
   VscHome,
@@ -13,6 +12,8 @@ import {
   VscAccount,
   VscSettingsGear,
 } from "react-icons/vsc";
+import TargetCursor from "./components/TargetCursor";
+import UserBoxPanel from "./components/UserBoxPanel";
 
 // Create a proper App component
 const App = () => {
@@ -49,11 +50,7 @@ const App = () => {
         backgroundColor: "#000000",
       }}
     >
-      <TargetCursor
-        spinDuration={2}
-        hideDefaultCursor={true}
-        parallaxOn={true}
-      />
+       
       {/* Aurora Background */}
       <div style={{ position: "absolute", inset: 0 }}>
         <Aurora
@@ -63,6 +60,12 @@ const App = () => {
           speed={0.5}
         />
       </div>
+
+      <TargetCursor
+        spinDuration={0}
+        hideDefaultCursor={true}
+        parallaxOn={true}
+      />
 
       {/* Content Layer */}
       <div
@@ -86,7 +89,7 @@ const App = () => {
           as="h1"
           typingSpeed={120}
           deletingSpeed={60}
-          pauseDuration={1000}
+          pauseDuration={10000}
           loop={true}
           showCursor={true}
           textColors={["#ffffffff", "#fffffff", "#ffffff"]}
@@ -130,6 +133,9 @@ const App = () => {
           </div>
         </div>
       </div>
+
+      <UserBoxPanel />
+
 
       {/* Dock at the top - horizontal */}
       <Dock

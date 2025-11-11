@@ -70,14 +70,16 @@ html, body {
 }
 
 .welcome-text span:nth-child(1) { animation-delay: 0s; }
-.welcome-text span:nth-child(2) { animation-delay: 0.05s; }
-.welcome-text span:nth-child(3) { animation-delay: 0.10s; }
-.welcome-text span:nth-child(4) { animation-delay: 0.15s; }
-.welcome-text span:nth-child(5) { animation-delay: 0.20s; }
-.welcome-text span:nth-child(6) { animation-delay: 0.25s; }
-.welcome-text span:nth-child(7) { animation-delay: 0.30s; }
-.welcome-text span:nth-child(8) { animation-delay: 0.35s; }
-.welcome-text span:nth-child(9) { animation-delay: 0.40s; }
+.welcome-text span:nth-child(2) { animation-delay: 0.085s; }
+.welcome-text span:nth-child(3) { animation-delay: 0.17s; }
+.welcome-text span:nth-child(4) { animation-delay: 0.255s; }
+.welcome-text span:nth-child(5) { animation-delay: 0.34s; }
+.welcome-text span:nth-child(6) { animation-delay: 0.425s; }
+.welcome-text span:nth-child(7) { animation-delay: 0.51s; }
+.welcome-text span:nth-child(8) { animation-delay: 0.595s; }
+.welcome-text span:nth-child(9) { animation-delay: 0.68s; }
+
+
 
 @keyframes slideInLetter {
     to {
