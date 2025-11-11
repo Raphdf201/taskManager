@@ -92,8 +92,13 @@ const App = () => {
           textColors={["#ffffffff", "#fffffff", "#ffffff"]}
           className="centered-text"
         />
-        <div className="rotating-text-container">
-          <span className="welcome-text">Bienvenue</span>
+        <div className="rotating-text-container" style={{ marginTop: '-1rem' }}>
+          <div style={{ position: 'relative', display: 'inline-block', marginRight: '1rem' }}>
+            <span className="welcome-text">
+              <span>B</span><span>i</span><span>e</span><span>n</span><span>v</span><span>e</span><span>n</span><span>u</span><span>e</span>
+            </span>
+            <div className="welcome-underline"></div>
+          </div>
           <RotatingText
             texts={["chez T4K!", "en comm!"]}
             mainClassName="rotating-text-styled"
@@ -117,7 +122,11 @@ const App = () => {
           }}
         >
           <div className="circular-gallery-container">
-            <CircularGallery bend={0.3} borderRadius={0.15} scrollEase={0.02} />
+            <CircularGallery
+              bend={0.3}
+              borderRadius={0.15}
+              scrollEase={0.02}
+            />
           </div>
         </div>
       </div>

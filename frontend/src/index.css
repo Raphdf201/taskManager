@@ -48,6 +48,7 @@ html, body {
         0 0 2px rgb(255, 255, 255);
 }
 
+
 .welcome-text {
     font-size: 2.5rem;
     font-weight: bold;
@@ -57,17 +58,50 @@ html, body {
     text-shadow: 
         0 0 1px rgb(255, 255, 255),
         0 0 2px rgb(255, 255, 255);
-    animation: fadeInUp 0.8s ease-out;
+    display: inline-block;
+    position: relative;
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(100px);
-    }
+.welcome-text span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInLetter 0.5s ease-out forwards;
+}
+
+.welcome-text span:nth-child(1) { animation-delay: 0s; }
+.welcome-text span:nth-child(2) { animation-delay: 0.05s; }
+.welcome-text span:nth-child(3) { animation-delay: 0.10s; }
+.welcome-text span:nth-child(4) { animation-delay: 0.15s; }
+.welcome-text span:nth-child(5) { animation-delay: 0.20s; }
+.welcome-text span:nth-child(6) { animation-delay: 0.25s; }
+.welcome-text span:nth-child(7) { animation-delay: 0.30s; }
+.welcome-text span:nth-child(8) { animation-delay: 0.35s; }
+.welcome-text span:nth-child(9) { animation-delay: 0.40s; }
+
+@keyframes slideInLetter {
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
+    }
+}
+
+.welcome-underline {
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    height: 4px;
+    background: white;
+    box-shadow: 
+        0 0 5px rgb(255, 255, 255),
+        0 0 10px rgb(255, 255, 255);
+    width: 0;
+    animation: expandLine 2s ease-out 0s forwards;
+}
+
+@keyframes expandLine {
+    to {
+        width: 100%;
     }
 }
 
@@ -77,7 +111,7 @@ html, body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 0.2rem;
 }
 
 /* RotatingText Styling */
