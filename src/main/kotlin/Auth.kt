@@ -155,6 +155,16 @@ fun Application.configureSecurity() {
                 call.respond(HttpStatusCode.Unauthorized)
             }
         }
+
+        get("/pfp") {
+            val session = call.sessions.get<UserSession>()
+            if (session?.isLoggedIn == true) {
+                if (session.pictureUrl != null) call.respondRedirect(session.pictureUrl)
+                else call.respond(HttpStatusCode.BadRequest)
+            } else {
+                call.respond(HttpStatusCode.Unauthorized)
+            }
+        }
     }
 }
 
