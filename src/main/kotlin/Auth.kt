@@ -169,7 +169,7 @@ fun Application.configureSecurity() {
         get("/pfpLink") {
             val session = call.sessions.get<UserSession>()
             if (session?.isLoggedIn == true) {
-                if (session.pictureUrl != null) call.respondText(session.pictureUrl)
+                if (session.pictureUrl != null) call.respond(ProfilePicture(session.pictureUrl))
                 else call.respond(HttpStatusCode.BadRequest)
             } else {
                 call.respond(HttpStatusCode.Unauthorized)
@@ -194,4 +194,9 @@ data class GoogleUserInfo(
     val given_name: String? = null,
     val family_name: String? = null,
     val picture: String? = null,
+)
+
+@Serializable
+data class ProfilePicture(
+    val url: String
 )
