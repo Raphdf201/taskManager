@@ -2,21 +2,21 @@
   display: flex;
   max-width: 100%;
   position: fixed;
-  top: 2rem; /* At the top */
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%);
+  top: 2rem; 
+  left: 50%; 
+  transform: translateX(-50%); /*TODO*/
   z-index: 1000;
 }
 
 .dock-panel {
   display: flex;
-  flex-direction: row; /* Horizontal layout */
-  align-items: center; /* Center items vertically */
+  flex-direction: row; 
+  align-items: center; 
   gap: 1.4rem;
   border-radius: 1.6rem;
   background: rgba(25, 25, 35, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 0.8rem 1.3rem; /* Swapped padding for horizontal */
+  padding: 0.8rem 1.3rem; 
   box-shadow:
     0 12px 40px rgba(0, 0, 0, 0.25),
     inset 0 0 12px rgba(255, 255, 255, 0.1);
@@ -71,7 +71,7 @@
 
 .dock-label {
   position: absolute;
-  top: calc(100% + 1rem); /* Below the icon */
+  top: calc(100% + 1rem); 
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
@@ -89,7 +89,7 @@
   pointer-events: none;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .dock-outer {
     top: 1rem;

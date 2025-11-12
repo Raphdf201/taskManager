@@ -1,0 +1,33 @@
+.logout-button {
+  position: fixed;
+  top:3rem;
+  right: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 1.8rem;
+  border-radius: 1rem;
+  background: rgba(25, 25, 35, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.25),
+    inset 0 0 8px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  z-index: 1000;
+}
+
+.logout-button:hover {
+  background: rgba(220, 38, 38, 0.3);
+  border-color: rgba(220, 38, 38, 0.5);
+}
+
+.logout-text {
+  white-space: nowrap;
+}
