@@ -40,12 +40,12 @@ export default function UserBoxPanel() {
           setCurrentUser({
             id: data.user.id,
             username: data.user.username,
-            profileImage: data.user.profileImage || data.user.avatar || data.user.picture,
+            profileImage: data.user.profileIcon,
           });
         } else if (data.id) {
           // If only ID is returned, fetch full user details
           return fetch(API_URL + '/user', {
-            credentials: 'include',
+              credentials: 'include',
           }).then(res => res.json());
         } else {
           throw new Error('Invalid response format');
@@ -56,7 +56,7 @@ export default function UserBoxPanel() {
           setCurrentUser({
             id: userData.id,
             username: userData.username,
-            profileImage: userData.profileImage || userData.avatar || userData.picture,
+            profileImage: userData.profileIcon,
           });
         }
       })

@@ -9,12 +9,19 @@ const App = () => {
 
   // Check if user is already logged in when app loads
   useEffect(() => {
+    // Check if we just got redirected back from OAuth
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('auth') === 'success') {
+      setIsAuthenticated(true);
+      setIsCheckingAuth(false);
+
+      return;
+    }
+
+    // Otherwise, check auth status normally
     fetch(API_URL + '/isLoggedIn', {
       method: 'GET',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
     })
       .then((res) => {
         if (res.ok) {
@@ -35,7 +42,7 @@ const App = () => {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    // Optionally call a logout endpoint if your API has one
+    fetch(API_URL + '/logout')
   };
 
   // Show loading while checking authentication

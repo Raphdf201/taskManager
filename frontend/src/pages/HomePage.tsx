@@ -12,18 +12,19 @@ import {
 import TargetCursor from "../components/TargetCursor";
 import UserBoxPanel from "../components/UserBoxPanel";
 import LogoutButton from "../components/LogoutButton";
+import { useNavigate } from "react-router";
 
 type HomePageProps = {
   onLogout: () => void;
-};
+};  
 
 export default function HomePage({ onLogout }: HomePageProps) {
-  const items = [
-    {
-      icon: <VscHome size={18} />,
-      label: "Menu",
-      onClick: () => alert("Menu!"),
-    },
+    const items = [
+      {
+        icon: <VscHome size={18} />,
+        label: "Menu",
+        onClick: () => alert("Menu"),
+      },
     {
       icon: <VscChecklist size={18} />,
       label: "Tâches",
@@ -31,7 +32,7 @@ export default function HomePage({ onLogout }: HomePageProps) {
     },
     {
       icon: <VscAccount size={18} />,
-      label: "Membres",
+      label: "Membres", 
       onClick: () => alert("Membres!"),
     },
     {
@@ -54,7 +55,7 @@ export default function HomePage({ onLogout }: HomePageProps) {
       
       <div style={{ position: "absolute", inset: 0 }}>
         <Aurora
-          colorStops={["#ffff2e", "#ed8ef5", "#000000"]}
+          colorStops={["#ffff00", "#ed8ef5", "#000000"]}
           blend={0.5}
           amplitude={1.0}
           speed={0.5}

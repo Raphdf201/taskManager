@@ -77,7 +77,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
         <HomeText
           text={["Bienvenue sur la plateforme de communication des équipes 3990 et 9406."]}
           as="h6"
-          typingSpeed={80}
+          typingSpeed={40}
           deletingSpeed={50}
           pauseDuration={1000}
           loop={true}
