@@ -9,7 +9,7 @@ type LogoutButtonProps = {
 export default function LogoutButton({ onLogout }: LogoutButtonProps) {
   return (
     <motion.button
-      className="logout-button"
+      className="logout-button cursor-target"
       onClick={onLogout}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.98 }}

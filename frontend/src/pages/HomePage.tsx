@@ -87,7 +87,7 @@ export default function HomePage({ onLogout }: HomePageProps) {
           as="h1"
           typingSpeed={120}
           deletingSpeed={60}
-          pauseDuration={10000}
+          pauseDuration={1000}
           loop={true}
           showCursor={true}
           textColors={["#ffffffff", "#fffffff", "#ffffff"]}
