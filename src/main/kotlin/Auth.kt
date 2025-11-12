@@ -121,13 +121,13 @@ fun Application.configureSecurity() {
 
                         val u = db.getUser(userInfo.id)
                         if (u == null) db.createUser(ExposedUser(userInfo.id, userInfo.name, userInfo.picture))
-                        call.respondRedirect(Constants.Static.DEV_FRONTEND)
+                        call.respondRedirect(Constants.Static.DEV_FRONTEND + "?auth=success")
                         return@get
                     } catch (e: Exception) {
                         log("Error at ${Clock.System.now()} : dev login ${e.message} ${e.stackTrace}")
                     }
                 }
-                call.respondRedirect(Constants.Static.DEV_FRONTEND)
+                call.respondRedirect(Constants.Static.DEV_FRONTEND + "?auth=failure")
             }
         }
 
