@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import './UserBoxPanel.css';
+import {API_URL} from "@/lib/utils";
 
 type User = {
   id: string;
@@ -17,7 +18,7 @@ export default function UserBoxPanel() {
 
   useEffect(() => {
     // First, check if user is logged in and get their info
-    fetch('https://commtasks.raphdf201.net/isLoggedIn', {
+    fetch(API_URL + '/isLoggedIn', {
       method: 'GET',
       credentials: 'include', // Important for cookies/sessions
       headers: {
@@ -43,7 +44,7 @@ export default function UserBoxPanel() {
           });
         } else if (data.id) {
           // If only ID is returned, fetch full user details
-          return fetch(`https://commtasks.raphdf201.net/user`, {
+          return fetch(API_URL + '/user', {
             credentials: 'include',
           }).then(res => res.json());
         } else {

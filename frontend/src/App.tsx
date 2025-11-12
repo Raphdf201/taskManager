@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
+import {API_URL} from "@/lib/utils";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -8,7 +9,7 @@ const App = () => {
 
   // Check if user is already logged in when app loads
   useEffect(() => {
-    fetch('https://commtasks.raphdf201.net/isLoggedIn', {
+    fetch(API_URL + '/isLoggedIn', {
       method: 'GET',
       credentials: 'include',
       headers: {

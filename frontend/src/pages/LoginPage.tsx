@@ -1,6 +1,7 @@
 import HomeText from '../components/HomeText';
 import Beams from '../components/Beams';
 import './LoginPage.css';
+import {API_URL} from "@/lib/utils";
 
 type LoginPageProps = {
   onLoginSuccess: () => void;
@@ -9,7 +10,7 @@ type LoginPageProps = {
 export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
   const handleGoogleLogin = () => {
     // Redirect to endpoint
-    window.location.href = 'https://commtasks.raphdf201.net/login';
+    window.location.href = API_URL + '/login';
   };
 
   return (
