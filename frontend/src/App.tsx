@@ -8,7 +8,7 @@ const App = () => {
 
   // Check if user is already logged in when app loads
   useEffect(() => {
-    fetch('https://apidog.raphdf201.net/isLoggedIn', {
+    fetch('https://commtasks.raphdf201.net/isLoggedIn', {
       method: 'GET',
       credentials: 'include',
       headers: {

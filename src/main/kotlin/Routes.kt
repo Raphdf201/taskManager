@@ -22,8 +22,7 @@ fun Application.configureDatabases() {
 
     routing {
         get("/") {
-            if (call.isLoggedIn()) call.respondRedirect(Constants.Static.TASKS)
-            else call.respondRedirect(Constants.Static.LOGIN)
+            call.respondRedirect(Constants.Static.FRONTEND)
         }
 
         get("/tasks") {

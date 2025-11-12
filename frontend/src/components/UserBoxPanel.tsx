@@ -17,7 +17,7 @@ export default function UserBoxPanel() {
 
   useEffect(() => {
     // First, check if user is logged in and get their info
-    fetch('https://apidog.raphdf201.net/isLoggedIn', {
+    fetch('https://commtasks.raphdf201.net/isLoggedIn', {
       method: 'GET',
       credentials: 'include', // Important for cookies/sessions
       headers: {
@@ -43,7 +43,7 @@ export default function UserBoxPanel() {
           });
         } else if (data.id) {
           // If only ID is returned, fetch full user details
-          return fetch(`https://apidog.raphdf201.net/users/${data.id}`, {
+          return fetch(`https://commtasks.raphdf201.net/user`, {
             credentials: 'include',
           }).then(res => res.json());
         } else {

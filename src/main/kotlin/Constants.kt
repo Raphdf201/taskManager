@@ -26,8 +26,7 @@ class Constants {
 
     class Static {
         companion object {
-            const val TASKS = "/index.html"
-            const val LOGIN = "/login.html"
+            const val FRONTEND = "/index.html"
         }
     }
 
