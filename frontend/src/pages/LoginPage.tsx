@@ -10,7 +10,7 @@ type LoginPageProps = {
 export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
   const handleGoogleLogin = () => {
     // Redirect to endpoint
-    window.location.href = API_URL + '/login';
+    window.location.href = API_URL + '/login/dev';
   };
 
   return (

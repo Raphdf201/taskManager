@@ -27,6 +27,7 @@ class Constants {
     class Static {
         companion object {
             const val FRONTEND = "/index.html"
+            const val DEV_FRONTEND = "http://localhost:5173/index.html"
         }
     }
 
