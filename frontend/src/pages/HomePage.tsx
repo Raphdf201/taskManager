@@ -93,6 +93,7 @@ export default function HomePage({ onLogout }: HomePageProps) {
           showCursor={true}
           textColors={["#ffffffff", "#fffffff", "#ffffff"]}
           className="centered-text"
+          deleteText = {true}
         />
         <div className="rotating-text-container" style={{ marginTop: '-1rem' }}>
           <div style={{ position: 'relative', display: 'inline-block', marginRight: '1rem' }}>

@@ -18,6 +18,7 @@ interface TextTypeProps {
   pauseDuration?: number;
   deletingSpeed?: number;
   loop?: boolean;
+  deleteText?: boolean;
   textColors?: string[];
   variableSpeed?: { min: number; max: number };
   onSentenceComplete?: (sentence: string, index: number) => void;
@@ -33,6 +34,7 @@ const TextType = ({
   pauseDuration = 2000,
   deletingSpeed = 30,
   loop = true,
+  deleteText = true,
   className = '',
   showCursor = true,
   hideCursorWhileTyping = false,
@@ -104,22 +106,29 @@ const TextType = ({
     const processedText = reverseMode ? currentText.split('').reverse().join('') : currentText;
 
     let timeout: NodeJS.Timeout;
-
-    // Typing phase
+    
     if (!isDeleting) {
       if (displayedText.length < processedText.length) {
         timeout = setTimeout(() => {
           setDisplayedText(processedText.slice(0, displayedText.length + 1));
         }, displayedText.length === 0 ? initialDelay : (variableSpeed ? getRandomSpeed() : typingSpeed));
       } else {
-        // Finished typing, pause then start deleting
+        // Finished typing
+        if (onSentenceComplete) {
+          onSentenceComplete(textArray[currentTextIndex], currentTextIndex);
+        }
+
+        // If deleteText is false, just stop here
+        if (!deleteText) {
+          return;
+        }
         timeout = setTimeout(() => {
           setIsDeleting(true);
         }, pauseDuration);
       }
     } 
-    // Deleting phase
-    else {
+    // (only if deleteText is true)
+    else if (deleteText) {
       if (displayedText.length > 0) {
         timeout = setTimeout(() => {
           setDisplayedText(prev => prev.slice(0, -1));
@@ -129,10 +138,6 @@ const TextType = ({
         if (currentTextIndex === textArray.length - 1 && !loop) {
           // Stop if last text and not looping
           return;
-        }
-
-        if (onSentenceComplete) {
-          onSentenceComplete(textArray[currentTextIndex], currentTextIndex);
         }
 
         // Reset for next text
@@ -153,6 +158,7 @@ const TextType = ({
     textArray,
     currentTextIndex,
     loop,
+    deleteText,
     initialDelay,
     isVisible,
     reverseMode,

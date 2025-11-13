@@ -17,57 +17,67 @@ export default function UserBoxPanel() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // First, check if user is logged in and get their info
+    console.log('Starting auth check...', API_URL);
+    
     fetch(API_URL + '/isLoggedIn', {
       method: 'GET',
-      credentials: 'include', // Important for cookies/sessions
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
     })
       .then((res) => {
+        console.log('Response status:', res.status);
+        console.log('Response ok:', res.ok);
+        
         if (!res.ok) {
           throw new Error('Not logged in');
         }
         return res.json();
       })
       .then((data) => {
-        console.log('isLoggedIn response:', data);
+        console.log('Full isLoggedIn response:', JSON.stringify(data, null, 2));
         
-        // The response might contain user data directly or an ID
-        // Adjust based on your API's actual response structure
         if (data.user) {
+          console.log('Found user in data.user:', data.user);
           setCurrentUser({
             id: data.user.id,
             username: data.user.username,
             profileImage: data.user.profileIcon,
           });
+          setIsLoading(false);
         } else if (data.id) {
-          // If only ID is returned, fetch full user details
+          console.log('Found ID, fetching full user details...');
           return fetch(API_URL + '/user', {
               credentials: 'include',
-          }).then(res => res.json());
+          })
+            .then(res => {
+              console.log('User endpoint status:', res.status);
+              return res.json();
+            })
+            .then((userData) => {
+              console.log('User data:', userData);
+              setCurrentUser({
+                id: userData.id,
+                username: userData.username,
+                profileImage: userData.profileIcon,
+              });
+              setIsLoading(false);
+            });
         } else {
+          console.log('No user or id found in response');
           throw new Error('Invalid response format');
         }
       })
-      .then((userData) => {
-        if (userData && !currentUser) {
-          setCurrentUser({
-            id: userData.id,
-            username: userData.username,
-            profileImage: userData.profileIcon,
-          });
-        }
-      })
       .catch((err) => {
-        console.error('Error fetching user:', err);
+        console.error('Error caught:', err);
+        console.error('Error message:', err.message);
         setError(err.message);
-      })
-      .finally(() => {
         setIsLoading(false);
       });
   }, []);
+
+  console.log('Current state:', { currentUser, isLoading, error });
 
   if (isLoading) {
     return (
@@ -79,7 +89,7 @@ export default function UserBoxPanel() {
     );
   }
 
-  if (error) {
+  if (error || !currentUser) {
     return (
       <div className="userbox-panel">
         <div className="userbox-error">
@@ -87,10 +97,6 @@ export default function UserBoxPanel() {
         </div>
       </div>
     );
-  }
-
-  if (!currentUser) {
-    return null;
   }
 
   return (
