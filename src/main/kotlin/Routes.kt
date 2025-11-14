@@ -25,70 +25,65 @@ fun Application.configureDatabases() {
             call.respondRedirect(Constants.Static.FRONTEND)
         }
 
-        get("/tasks") {
-            call.authorizedActionWithMessage {
-                db.getTasks()
+        route("/tasks") {
+            get {
+                call.authorizedActionWithMessage {
+                    db.getTasks()
+                }
+            }
+
+            post<ExposedTaskReceive> {
+                call.authorizedActionWithMessage(HttpStatusCode.Created) {
+                    db.createTask(call.receive())
+                }
+            }
+
+            get("/{id}") {
+                val task = db.getTask(call.parameters["id"]?.toInt())
+                if (task != null) call.respond(task)
+                else call.respond(HttpStatusCode.NotFound)
+            }
+
+            put<ExposedTaskReceive>("/{id}") {
+                call.authorizedAction(HttpStatusCode.NoContent) {
+                    db.updateTask(
+                        call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID"),
+                        call.receive()
+                    )
+                }
+            }
+
+            delete("/{id}") {
+                call.authorizedAction(HttpStatusCode.NoContent) {
+                    db.deleteTask(call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID"))
+                }
             }
         }
 
-        get("/tasks/{id}") {
-            val task = db.getTask(call.parameters["id"]?.toInt())
-            if (task != null) call.respond(task)
-            else call.respond(HttpStatusCode.NotFound)
-        }
-
-        post("/tasks") {
-            val task = call.receive<ExposedTaskReceive>()
-            call.authorizedActionWithMessage(HttpStatusCode.Created) {
-                db.createTask(task)
+        route("/users") {
+            get {
+                call.authorizedActionWithMessage {
+                    db.getUsers()
+                }
             }
-        }
 
-        put("/tasks/{id}") {
-            call.authorizedAction(HttpStatusCode.NoContent) {
-                db.updateTask(
-                    call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID"),
-                    call.receive<ExposedTaskReceive>()
-                )
+            get("/{id}") {
+                val user = db.getUser(call.parameters["id"])
+                if (user != null) call.respond(user)
+                else call.respond(HttpStatusCode.NotFound)
             }
-        }
 
-        delete("/tasks/{id}") {
-            call.authorizedAction(HttpStatusCode.NoContent) {
-                db.deleteTask(call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID"))
+            put<ExposedUser>("/{id}") {
+                call.authorizedAction(HttpStatusCode.NoContent) {
+                    db.updateUser(call.parameters["id"], call.receive())
+                }
             }
-        }
 
-        get("/users") {
-            call.authorizedActionWithMessage {
-                db.getUsers()
+            delete("/{id}") {
+                call.authorizedAction(HttpStatusCode.NoContent) {
+                    db.deleteUser(call.parameters["id"])
+                }
             }
-        }
-
-        get("/users/{id}") {
-            val user = db.getUser(call.parameters["id"])
-            if (user != null) call.respond(user)
-            else call.respond(HttpStatusCode.NotFound)
-        }
-
-        put("/users/{id}") {
-            call.authorizedAction(HttpStatusCode.NoContent) {
-                db.updateUser(call.parameters["id"], call.receive<ExposedUser>())
-            }
-        }
-
-        delete("/users/{id}") {
-            call.authorizedAction(HttpStatusCode.NoContent) {
-                db.deleteUser(call.parameters["id"])
-            }
-        }
-
-        get("/testLogin") {
-            val session = call.sessions.get<UserSession>()
-            call.respondText(
-                "tk : ${session?.accessToken}<br>lgin : ${session?.isLoggedIn}",
-                ContentType.Text.Html
-            )
         }
 
         get("/isLoggedIn") {
