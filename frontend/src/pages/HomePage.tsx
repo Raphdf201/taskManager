@@ -12,7 +12,6 @@ import {
 import TargetCursor from "../components/TargetCursor";
 import UserBoxPanel from "../components/UserBoxPanel";
 import LogoutButton from "../components/LogoutButton";
-import { useNavigate } from "react-router";
 
 type HomePageProps = {
   onLogout: () => void;
