@@ -1,6 +1,6 @@
 [versions]
 exposed = "0.61.0"
-jdbc = "3.5.6"
+jdbc = "3.5.7"
 kotlin = "2.2.21"
 ktor = "3.3.3"
 logback = "1.5.22"
