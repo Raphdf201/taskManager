@@ -7,9 +7,12 @@
   background-color: #FAFFF0;
   min-height: 100vh;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .welcome-text {
+  position: fixed;
   color: #1B1811;
   font-family: 'Unbounded';
   font-weight: 400;
@@ -41,11 +44,10 @@
   }
 }
 .navbar {
-  position: absolute;
-  top: 50px;
-  left: 25vw;
   display: flex;
+  justify-content: center;
   gap: 150px;
+  padding: 5vh 7vw;
 }
 
 .navbar a {

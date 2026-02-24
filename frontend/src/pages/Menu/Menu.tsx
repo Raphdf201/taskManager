@@ -2,6 +2,8 @@ import './Menu.css'
 import { useState, useEffect } from 'react'
 import {Link} from 'react-router-dom'
 
+import Pipes from '../../components/common/Pipes'
+
 function Menu() {
 
   const [userName, setUserName] = useState<string>('Samy')
@@ -34,6 +36,7 @@ function Menu() {
 
   return (
     <div className='menu-page'>
+    <Pipes opacity ={0.2} />
      <div className="top-line"></div>
      <nav className="navbar">
      <Link to="/menu">Menu</Link>
