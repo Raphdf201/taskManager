@@ -1,143 +1,17 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #000000;
-    overflow: hidden;
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
 }
 
 #root {
-    width: 100vw;
-    height: 100vh;
-    background-color: #000000;
-}
-
-/* TextType Component Styles */
-.text-type {
-    display: inline-block;
-    white-space: pre-wrap;
-}
-
-.text-type__cursor {
-    margin-left: 0.25rem;
-    display: inline-block;
-    opacity: 1;
-}
-
-.text-type__cursor--hidden {
-    display: none;
-}
-
-/* Centered Text Styling */
-.centered-text {
-    font-size: 4rem;
-    font-weight: bold;
-    color: white;
-    text-align: center;
-    font-family: 'Work Sans', sans-serif;
-    margin-bottom: 2rem;
-    text-shadow: 
-        0 0 1px rgb(255, 255, 255),
-        0 0 2px rgb(255, 255, 255);
-}
-
-
-.welcome-text {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: white;
-    font-family: 'Work Sans', sans-serif;
-    margin-right: 0.1rem;
-    text-shadow: 
-        0 0 1px rgb(255, 255, 255),
-        0 0 2px rgb(255, 255, 255);
-    display: inline-block;
-    position: relative;
-}
-
-.welcome-text span {
-    display: inline-block;
-    opacity: 0;
-    transform: translateX(-20px);
-    animation: slideInLetter 0.5s ease-out forwards;
-}
-
-.welcome-text span:nth-child(1) { animation-delay: 0s; }
-.welcome-text span:nth-child(2) { animation-delay: 0.085s; }
-.welcome-text span:nth-child(3) { animation-delay: 0.17s; }
-.welcome-text span:nth-child(4) { animation-delay: 0.255s; }
-.welcome-text span:nth-child(5) { animation-delay: 0.34s; }
-.welcome-text span:nth-child(6) { animation-delay: 0.425s; }
-.welcome-text span:nth-child(7) { animation-delay: 0.51s; }
-.welcome-text span:nth-child(8) { animation-delay: 0.595s; }
-.welcome-text span:nth-child(9) { animation-delay: 0.68s; }
-
-
-
-@keyframes slideInLetter {
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.welcome-underline {
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    height: 4px;
-    background: white;
-    box-shadow: 
-        0 0 5px rgb(255, 255, 255),
-        0 0 10px rgb(255, 255, 255);
-    width: 0;
-    animation: expandLine 2s ease-out 0s forwards;
-}
-
-@keyframes expandLine {
-    to {
-        width: 100%;
-    }
-}
-
-/* RotatingText Container */
-.rotating-text-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-top: 0.2rem;
-}
-
-/* RotatingText Styling */
-.rotating-text-styled {
-    font-size: 1.4rem;
-    font-weight: bold;
-    background-color: #ecec27;
-    color: #0a0303;
-    padding: 0.75rem 2rem;
-    border-radius: 0.90rem;
-    font-family: 'Work Sans', sans-serif;
-    display: inline-flex;
-    justify-content: center;
-}
-
-/* Responsive text size */
-@media (max-width: 768px) {
-    .centered-text {
-        font-size: 2rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .centered-text {
-        font-size: 1.5rem;
-    }
+  width: 100%;
+  min-height: 100vh;
 }
