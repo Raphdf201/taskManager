@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500;600;700;800;900&display=swap');
+
+
+.menu-page{
+  position: fixed;
+  background-color: #FAFFF0;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.welcome-text {
+  color: #1B1811;
+  font-family: 'Unbounded';
+  font-weight: 400;
+  font-size: 7rem;
+  margin-top:35vh;
+  margin-left: 7vw;
+}
+
+.cursor {
+  font-weight: 200;
+}
+
+.top-line {
+  position: absolute;
+  top: 125px;
+  width: 100%;
+  height: 2.5px;
+  background-color: #1B1811;
+  transform-origin: left;
+  animation: expandLine 0.8s ease-out forwards;
+}
+
+@keyframes expandLine {
+  from {
+    transform: scaleX(0);
+  }
+  to  {
+    transform: scaleX(1)
+  }
+}
+.navbar {
+  position: absolute;
+  top: 50px;
+  left: 25vw;
+  display: flex;
+  gap: 150px;
+}
+
+.navbar a {
+  color: #1B1811;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  font-size: 2rem;
+  text-decoration: none;
+  transition: opacity 0.3s;
+  cursor: pointer;
+  opacity: 0;
+  animation: slideIn 1s ease-out forwards;
+  transform: translateX(-75px);
+}
+
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
