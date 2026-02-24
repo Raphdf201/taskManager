@@ -33,12 +33,12 @@ fun Application.configureSecurity() {
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
                     Constants.Auth.NAME,
-                    Constants.Auth.AUTHORIZE_URL,
-                    Constants.Auth.ACCESS_TOKEN_URL,
-                    HttpMethod.Post,
-                    Constants.Auth.CLIENT_ID,
-                    Constants.Auth.CLIENT_SECRET,
-                    Constants.Auth.DEFAULT_SCOPES
+                    authorizeUrl = Constants.Auth.AUTHORIZE_URL,
+                    accessTokenUrl = Constants.Auth.ACCESS_TOKEN_URL,
+                    requestMethod = HttpMethod.Post,
+                    clientId = Constants.Auth.CLIENT_ID,
+                    clientSecret = Constants.Auth.CLIENT_SECRET,
+                    defaultScopes = Constants.Auth.DEFAULT_SCOPES
                 )
             }
             client = httpClient
@@ -48,12 +48,12 @@ fun Application.configureSecurity() {
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
                     Constants.Auth.NAME,
-                    Constants.Auth.AUTHORIZE_URL,
-                    Constants.Auth.ACCESS_TOKEN_URL,
-                    HttpMethod.Post,
-                    Constants.Auth.CLIENT_ID,
-                    Constants.Auth.CLIENT_SECRET,
-                    Constants.Auth.DEFAULT_SCOPES
+                    authorizeUrl = Constants.Auth.AUTHORIZE_URL,
+                    accessTokenUrl = Constants.Auth.ACCESS_TOKEN_URL,
+                    requestMethod = HttpMethod.Post,
+                    clientId = Constants.Auth.CLIENT_ID,
+                    clientSecret = Constants.Auth.CLIENT_SECRET,
+                    defaultScopes = Constants.Auth.DEFAULT_SCOPES
                 )
             }
             client = httpClient
