@@ -5,8 +5,6 @@ import {Link} from 'react-router-dom'
 import Pipes from '../../components/common/Pipes'
 
 function Menu() {
-
-  const [userName, setUserName] = useState<string>('Samy')
   const [displayText, setDisplayText] = useState<string>('')
   const [showCursor, setShowCursor] = useState<boolean>(true)
   const fullText = "Bonjour,\nSamy"
