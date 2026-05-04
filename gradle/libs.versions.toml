@@ -1,7 +1,7 @@
 [versions]
 exposed = "1.1.1"
 jdbc = "3.5.8"
-kotlin = "2.3.20"
+kotlin = "2.3.21"
 ktor = "3.4.3"
 logback = "1.5.32"
 
