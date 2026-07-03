@@ -5,21 +5,21 @@ import java.util.concurrent.locks.ReentrantLock
 class Constants {
     class Database {
         companion object {
-            const val URL = "jdbc:mariadb://192.168.1.14:3306/taskmanager"
-            const val USER = "taskmgr"
+            const val URL = "jdbc:POSTGRES://IP:3306/taskmanager"
+            const val USER = "USER"
             const val DRIVER = "org.mariadb.jdbc.Driver"
-            const val PASSWORD = "TaskManagerPw124!"
+            const val PASSWORD = "PASSWORD"
         }
     }
 
     class Auth {
         companion object {
-            const val CALLBACK = "https://commtasks.raphdf201.net/callback"
+            const val CALLBACK = "https://DOMAIN.raphdf201.net/callback"
             const val NAME = "google"
             const val AUTHORIZE_URL = "https://accounts.google.com/o/oauth2/auth"
             const val ACCESS_TOKEN_URL = "https://accounts.google.com/o/oauth2/token"
-            const val CLIENT_ID = "963962680553-ju8joh4ct4qeevmu4n132t48slk77vq5.apps.googleusercontent.com"
-            const val CLIENT_SECRET = "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"
+            const val CLIENT_ID = "ID"
+            const val CLIENT_SECRET = "SECRET"
             val DEFAULT_SCOPES = listOf("https://www.googleapis.com/auth/userinfo.profile")
         }
     }
